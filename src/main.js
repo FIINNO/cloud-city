@@ -19,34 +19,17 @@ document.body.appendChild(renderer.domElement);
 
 const controls = new OrbitControls( camera, renderer.domElement );
 
+const loader = new THREE.TextureLoader();
+const texture = loader.load("imgs/skybox/cloud-city360.png");
 
-//Skybox textures
-const frontImg = new THREE.TextureLoader().load("./imgs/skybox/corona_ft.png");
-const backImg = new THREE.TextureLoader().load("./imgs/skybox/corona_bk.png");
-const upImg = new THREE.TextureLoader().load("./imgs/skybox/corona_up.png");
-const downImg = new THREE.TextureLoader().load("./imgs/skybox/corona_dn.png");
-const leftImg = new THREE.TextureLoader().load("./imgs/skybox/corona_lf.png");
-const rightImg = new THREE.TextureLoader().load("./imgs/skybox/corona_rt.png");
-
-// const frontImg = new THREE.TextureLoader().load("./imgs/skybox/cloudcity_front.png");
-// const backImg = new THREE.TextureLoader().load("./imgs/skybox/cloudcity_back.png");
-// const upImg = new THREE.TextureLoader().load("./imgs/skybox/cloudcity_up.png");
-// const downImg = new THREE.TextureLoader().load("./imgs/skybox/cloudcity_down.png");
-// const leftImg = new THREE.TextureLoader().load("./imgs/skybox/cloudcity_left.png");
-// const rightImg = new THREE.TextureLoader().load("./imgs/skybox/cloudcity_right.png");
-
-const textureLoaderArray = [frontImg, backImg, upImg, downImg, rightImg, leftImg];
-
-const skyBoxMaterialArray = textureLoaderArray.map(texture => {
-    return new THREE.MeshBasicMaterial({ map: texture, side: THREE.BackSide });
+const sphereGeometry = new THREE.SphereGeometry(5000, 60, 40);
+const sphereMaterial = new THREE.MeshBasicMaterial({
+    map: texture,
+    side: THREE.DoubleSide,
+    overdraw: 0.5
 });
-
-
-
-// Skybox cube
-const skyboxGeometry = new THREE.BoxGeometry(10000,10000,10000);
-let skybox = new THREE.Mesh(skyboxGeometry, skyBoxMaterialArray);
-scene.add(skybox);
+const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+scene.add(sphere);
 
 animate();
 
