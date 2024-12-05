@@ -20,7 +20,7 @@ document.body.appendChild(renderer.domElement);
 const controls = new OrbitControls( camera, renderer.domElement );
 
 const loader = new THREE.TextureLoader();
-const texture = loader.load("imgs/skybox/cloud-city360.png");
+const texture = loader.load("imgs/skybox/cloud-city2_upscaled.png");
 
 const sphereGeometry = new THREE.SphereGeometry(5000, 60, 40);
 const sphereMaterial = new THREE.MeshBasicMaterial({
