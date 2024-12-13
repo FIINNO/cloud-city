@@ -9,14 +9,14 @@ const scene = new THREE.Scene();
 
 // Camera
 let camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 45, 30000);
-camera.position.set(1200, -250, 4000);
+camera.position.set(-2000, 200, -3000);
 
 
 // Lightning
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
 scene.add(ambientLight);
 
-const sunLight = new THREE.DirectionalLight(0xffffff, 1.0);
+const sunLight = new THREE.DirectionalLight(0xffffff, 5.0);
 sunLight.position.set(-3500,1000.0,5000);
 sunLight.castShadow = true;
 scene.add(sunLight);
@@ -30,8 +30,8 @@ scene.add(sunHelper);
 const modelLoader = new GLTFLoader().setPath('./models/cloud_city_model/');
 modelLoader.load('scene.gltf', (gltf) => {
     const mesh = gltf.scene;
-    mesh.position.set(1000.0, 0.0, -1000.0);
-    mesh.scale.set(0.2,0.2,0.2);
+    mesh.position.set(200, -100, -1200);
+    mesh.scale.set(0.05, 0.05, 0.05);
     scene.add(mesh);
 });
 
@@ -52,8 +52,11 @@ const sphereMaterial = new THREE.MeshBasicMaterial({
     overdraw: 0.5
 });
 const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-sphere.rotateY(3.7 * Math.PI/ 4);
+//sphere.rotateY(3.7 * Math.PI/ 4);
 scene.add(sphere);
+
+const axesHelper = new THREE.AxesHelper(100);
+scene.add(axesHelper);
 
 animate();
 
