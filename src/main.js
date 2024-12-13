@@ -43,8 +43,6 @@ modelLoader.load('./cloud_car_model/scene.gltf', (gltf) => {
     cloudCarObject.scale.set(0.5,0.5,0.5);
     cloudCarObject.rotation.set(0, -Math.PI/2,0);
     cloudCarObject.position.set(-1500, 200, -2000);
-    //const materials = cloudCarObject.getObjectByName("materials");
-    //console.log(materials);
     scene.add(cloudCarObject);
 });
 
