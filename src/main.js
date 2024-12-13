@@ -20,7 +20,7 @@ document.body.appendChild(renderer.domElement);
 const controls = new OrbitControls( camera, renderer.domElement );
 
 const loader = new THREE.TextureLoader();
-const texture = loader.load("imgs/skybox/cloud-city2_upscaled.png");
+const texture = loader.load("imgs/skybox/cloud-city-env.png");
 
 const sphereGeometry = new THREE.SphereGeometry(5000, 60, 40);
 const sphereMaterial = new THREE.MeshBasicMaterial({
@@ -29,6 +29,7 @@ const sphereMaterial = new THREE.MeshBasicMaterial({
     overdraw: 0.5
 });
 const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+sphere.rotateY(3.7 * Math.PI/ 4);
 scene.add(sphere);
 
 animate();
