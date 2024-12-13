@@ -13,8 +13,16 @@ camera.position.set(1200, -250, 4000);
 
 
 // Lightning
-const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
 scene.add(ambientLight);
+
+const sunLight = new THREE.DirectionalLight(0xffffff, 1.0);
+sunLight.position.set(-3500,1000.0,5000);
+sunLight.castShadow = true;
+scene.add(sunLight);
+
+const sunHelper = new THREE.DirectionalLightHelper(sunLight, 100);
+scene.add(sunHelper);
 
 
 // Model loader
