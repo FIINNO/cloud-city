@@ -27,13 +27,28 @@ scene.add(sunHelper);
 
 // Model loader
 
-const modelLoader = new GLTFLoader().setPath('./models/cloud_city_model/');
-modelLoader.load('scene.gltf', (gltf) => {
-    const mesh = gltf.scene;
-    mesh.position.set(200, -100, -1200);
-    mesh.scale.set(0.05, 0.05, 0.05);
-    scene.add(mesh);
+var cloudCityObject;
+var cloudCarObject; 
+
+const modelLoader = new GLTFLoader().setPath('./models/');
+modelLoader.load('./cloud_city_model/scene.gltf', (gltf) => {
+    cloudCityObject = gltf.scene;
+    cloudCityObject.position.set(200, -100, -1200);
+    cloudCityObject.scale.set(0.05, 0.05, 0.05);
+    scene.add(cloudCityObject);
 });
+
+modelLoader.load('./cloud_car_model/scene.gltf', (gltf) => {
+    cloudCarObject = gltf.scene;
+    cloudCarObject.scale.set(0.5,0.5,0.5);
+    cloudCarObject.rotation.set(0, -Math.PI/2,0);
+    cloudCarObject.position.set(-1500, 200, -2000);
+    //const materials = cloudCarObject.getObjectByName("materials");
+    //console.log(materials);
+    scene.add(cloudCarObject);
+});
+
+
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({antialias:true});
