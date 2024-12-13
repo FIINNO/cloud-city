@@ -1,6 +1,7 @@
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 
 // Scene setup
@@ -11,9 +12,31 @@ let camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHei
 camera.position.set(1200, -250, 4000);
 
 
+// Lightning
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
+scene.add(ambientLight);
+
+const sunLight = new THREE.DirectionalLight(0xffffff, 1.0);
+sunLight.position.set(-3500,1000.0,5000);
+sunLight.castShadow = true;
+scene.add(sunLight);
+
+const sunHelper = new THREE.DirectionalLightHelper(sunLight, 100);
+scene.add(sunHelper);
+
+
+// Model loader
+
+const modelLoader = new GLTFLoader().setPath('./models/cloud_city_model/');
+modelLoader.load('scene.gltf', (gltf) => {
+    const mesh = gltf.scene;
+    mesh.position.set(1000.0, 0.0, -1000.0);
+    mesh.scale.set(0.2,0.2,0.2);
+    scene.add(mesh);
+});
 
 // Renderer
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({antialias:true});
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
