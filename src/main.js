@@ -2,17 +2,16 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { Camera } from "./camera.js";
 
 
 // Scene setup
 const scene = new THREE.Scene();
 
 // Camera
-let camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 45, 30000);
-//const cameraStartPos = new THREE.Vector3(-2000, 200, -3000)
-camera.position.set(-2000, 200, -3000);
-camera.lookAt(0, 0, 0);
-
+const cameraObject = new Camera();
+const camera = cameraObject.getInstance();
+scene.add(camera);
 
 const loadingScreen = document.getElementById('loading-screen');
 const loadingBar = document.getElementById('loading-bar');
@@ -84,7 +83,7 @@ const cameraPathPoints = [
     new THREE.Vector3(-1000, 250, -1000),
 ];
 
-const cameraPath = new THREE.CatmullRomCurve3(cameraPathPoints);
+const cameraPath = new THREE.CatmullRomCurve3(cameraPathPoints); 
 
 const pathPoints = cameraPath.getPoints(50);
 const pathGeometry = new THREE.BufferGeometry().setFromPoints(pathPoints);
@@ -92,28 +91,6 @@ const pathMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 });
 const pathLine = new THREE.Line(pathGeometry, pathMaterial);
 scene.add(pathLine);
 
-let scrollProgress = 0;
-let scrollProgressElement = document.getElementById('scroll-progress');
-window.addEventListener('scroll', () => {
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    scrollProgress = window.scrollY / maxScroll;
-    scrollProgressElement.innerText = "Scroll Progress: " + scrollProgress.toFixed(2);
-    animateCamera();
-});
-
-const startLookAt = new THREE.Vector3(0, 0, 0);
-const targetLookAt = new THREE.Vector3(200, 0, -1200);
-
-function animateCamera() {
-    const pointOnCurve = cameraPath.getPointAt(scrollProgress);
-    camera.position.copy(pointOnCurve);
-    const currentLookAt = new THREE.Vector3().lerpVectors(
-        startLookAt,
-        targetLookAt,
-        Math.min(scrollProgress * 2, 1)
-    );
-    camera.lookAt(currentLookAt);
-}
 
 
 animate();
