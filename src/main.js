@@ -9,7 +9,24 @@ const scene = new THREE.Scene();
 
 // Camera
 let camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 45, 30000);
+//const cameraStartPos = new THREE.Vector3(-2000, 200, -3000)
 camera.position.set(-2000, 200, -3000);
+camera.lookAt(0, 0, 0);
+
+
+const loadingScreen = document.getElementById('loading-screen');
+const loadingBar = document.getElementById('loading-bar');
+
+const loadingManager = new THREE.LoadingManager();
+
+loadingManager.onProgress = (url, loaded, total) => {
+    const progress = (loaded / total) * 100;
+    loadingBar.style.width = `${progress}%`;
+}
+
+loadingManager.onLoad = () => {
+    loadingScreen.style.display = 'none';
+}
 
 
 // Lightning
@@ -27,7 +44,7 @@ scene.add(sunHelper);
 
 // Model loader
 
-const modelLoader = new GLTFLoader().setPath('./models/cloud_city_model/');
+const modelLoader = new GLTFLoader(loadingManager).setPath('./models/cloud_city_model/');
 modelLoader.load('scene.gltf', (gltf) => {
     const mesh = gltf.scene;
     mesh.position.set(200, -100, -1200);
@@ -40,7 +57,7 @@ const renderer = new THREE.WebGLRenderer({antialias:true});
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-const controls = new OrbitControls( camera, renderer.domElement );
+//const controls = new OrbitControls( camera, renderer.domElement );
 
 const loader = new THREE.TextureLoader();
 const texture = loader.load("imgs/skybox/cloud-city-env.png");
@@ -50,23 +67,56 @@ const sphereMaterial = new THREE.MeshBasicMaterial({
     map: texture,
     side: THREE.DoubleSide,
     overdraw: 0.5
-});
+}); 
 const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-//sphere.rotateY(3.7 * Math.PI/ 4);
 scene.add(sphere);
 
 const axesHelper = new THREE.AxesHelper(100);
 scene.add(axesHelper);
 
+// Camera path
+const cameraPathPoints = [
+    new THREE.Vector3(-2000, 200, -3000),
+    new THREE.Vector3(-1800, 210, -2500),
+    new THREE.Vector3(-1600, 220, -2000),
+    new THREE.Vector3(-1400, 230, -1800),
+    new THREE.Vector3(-1200, 240, -1600),
+    new THREE.Vector3(-1000, 250, -1400),
+];
+
+const cameraPath = new THREE.CatmullRomCurve3(cameraPathPoints);
+
+const pathPoints = cameraPath.getPoints(50);
+const pathGeometry = new THREE.BufferGeometry().setFromPoints(pathPoints);
+const pathMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 });
+const pathLine = new THREE.Line(pathGeometry, pathMaterial);
+scene.add(pathLine);
+
+let scrollProgress = 0;
+let scrollProgressElement = document.getElementById('scroll-progress');
+window.addEventListener('scroll', () => {
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    scrollProgress = window.scrollY / maxScroll;
+    scrollProgressElement.innerText = "Scroll Progress: " + scrollProgress.toFixed(2);
+    animateCamera();
+});
+
+function animateCamera() {
+    const pointOnCurve = cameraPath.getPointAt(scrollProgress);
+    camera.position.copy(pointOnCurve);
+
+    camera.lookAt(200, -100, -1200);
+}
+
+
 animate();
-
-
 
 // Animation loop
 function animate() {
     requestAnimationFrame(animate);
-    
+
     renderer.render(scene, camera);
+
 }
 
 

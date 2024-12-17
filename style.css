@@ -4,5 +4,40 @@
 }
 
 body {
+    height: 300vh;
+}
+
+
+canvas {
+    position: fixed;
+}
+
+#ui-container {
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    left: 0;
+}
+
+#loading-screen {
+    position: fixed;
     height: 100vh;
+    width: 100vw;
+    z-index: 10;
+    background-color: rgba(100, 100, 100, 0.30);  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#loading-bar-container {
+    width: 50%;
+}
+
+#loading-bar {
+    width: 0%;
+    height: 0.8rem;
+    background-color: rgba(255, 255, 255, 0.5);
+    transition: width 0.2s ease;
+    border-radius: 0.4rem;
 }
