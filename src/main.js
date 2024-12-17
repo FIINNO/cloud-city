@@ -44,6 +44,7 @@ modelLoader.load('./cloud_car_model/scene.gltf', (gltf) => {
     cloudCarObject.scale.set(0.5,0.5,0.5);
     cloudCarObject.rotation.set(0, -Math.PI/2,0);
     cloudCarObject.position.set(camera.position.x + 600, camera.position.y - 150, camera.position.z -100);
+    cloudCarObject.direction = new THREE.Vector3(0,0,1);
     scene.add(cloudCarObject);
 });
 
