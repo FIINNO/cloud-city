@@ -9,7 +9,7 @@ import * as animationUtils from './animation-utils.js'
 const scene = new THREE.Scene();
 
 // Camera
-let camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 45, 30000);
+let camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 45, 10000);
 camera.position.set(-2000, 200, -3000);
 
 
@@ -30,8 +30,9 @@ scene.add(sunHelper);
 
 var cloudCityObject;
 var cloudCarObject; 
+var cloudCarObjects = [];
 
-const modelLoader = new GLTFLoader().setPath('./models/');
+var modelLoader = new GLTFLoader().setPath('./models/');
 modelLoader.load('./cloud_city_model/scene.gltf', (gltf) => {
     cloudCityObject = gltf.scene;
     cloudCityObject.position.set(200, -100, -1200);
@@ -39,15 +40,7 @@ modelLoader.load('./cloud_city_model/scene.gltf', (gltf) => {
     scene.add(cloudCityObject);
 });
 
-modelLoader.load('./cloud_car_model/scene.gltf', (gltf) => {
-    cloudCarObject = gltf.scene;
-    cloudCarObject.scale.set(0.5,0.5,0.5);
-    cloudCarObject.rotation.set(0, -Math.PI/2,0);
-    cloudCarObject.position.set(camera.position.x + 600, camera.position.y - 150, camera.position.z -100);
-    cloudCarObject.direction = new THREE.Vector3(0,0,1);
-    scene.add(cloudCarObject);
-});
-
+addCloudCar();
 
 
 // Renderer
@@ -74,11 +67,43 @@ scene.add(axesHelper);
 
 animate();
 
+
+function addCloudCarEvent(){
+    const probability = 1/1000;
+    const random = Math.random();
+    if(random<probability){
+        addCloudCar();
+    }
+    else{
+        return;
+    }
+}
+
+function addCloudCar(){
+    if(cloudCarObjects.length>2){
+        return;
+    }
+    console.log("Adding cloud car");
+    modelLoader.load('./cloud_car_model/scene.gltf', (gltf) => {
+        let cloudCar = gltf.scene;
+        cloudCar = animationUtils.randomCloudCarPosition(cloudCar, camera);
+        scene.add(cloudCar);
+        cloudCarObjects.push(cloudCar);
+        console.log("Current amount of cloud cars is: ", cloudCarObjects.length);
+    });
+    
+}
+
+
+setInterval(addCloudCar, 6000);
+
+
 // Animation loop
 function animate() {
-    requestAnimationFrame(animate);
-    cloudCarObject = animationUtils.animateCloudCar(cloudCarObject, camera);
+    //addCloudCarEvent();
+    cloudCarObjects = animationUtils.animateCloudCars(cloudCarObjects, camera, scene);
     renderer.render(scene, camera);
+    requestAnimationFrame(animate);
 }
 
 

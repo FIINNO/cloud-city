@@ -1,8 +1,7 @@
 import * as THREE from 'three';
 
 
-function updateCloudCarPosition(cloudCarObject, camera){
-    console.log("too small...");
+export function randomCloudCarPosition(cloudCarObject, camera){
     cloudCarObject.scale.set(0.5,0.5,0.5);
     
 
@@ -20,8 +19,8 @@ function updateCloudCarPosition(cloudCarObject, camera){
     let newPositionY = camera.position.y+randomValueY;
 
     // Spacing to the camera near plane.
-    const widthOffset = width*0.4;
-    const heightOffset = height*0.4;
+    const widthOffset = width*0.8;
+    const heightOffset = height*0.8;
 
     //Ensure the ship is not spawning in the close area of the xy-plane as the near plane. 
     while(newPositionX > (-width-widthOffset) && newPositionX < (width+widthOffset) && newPositionY > (-height-heightOffset) && newPositionY < (height+heightOffset)){
@@ -51,22 +50,28 @@ function updateCloudCarPosition(cloudCarObject, camera){
 }
 
 
-export function animateCloudCar(cloudCarObject, camera){
-    if(!cloudCarObject){return;}    // Ensure cloudCarObject is defined...
-    const previousScale = cloudCarObject.scale;
-    const previousCameraDistance = camera.position.distanceTo(cloudCarObject.position);
-    const velocity = 4;
-    if(cloudCarObject.position.distanceTo(new THREE.Vector3(0,0,0))>4500){
-        cloudCarObject = updateCloudCarPosition(cloudCarObject, camera);
-        return cloudCarObject;
+
+export function animateCloudCars(cloudCarObjects, camera, scene){
+    if(!cloudCarObjects){return;}    // Ensure cloudCarObject is defined...
+    for(let i = 0; i<cloudCarObjects.length;++i){
+        if(!cloudCarObjects[i]){continue;}
+        const previousScale = cloudCarObjects[i].scale;
+        const previousCameraDistance = camera.position.distanceTo(cloudCarObjects[i].position);
+        const velocity = 4;
+        if(cloudCarObjects[i].position.distanceTo(new THREE.Vector3(0,0,0))>4500){
+            scene.remove(cloudCarObjects[i]);
+            cloudCarObjects.splice(i,1);
+            i--;
+            continue;
+        }
+
+        const direction = cloudCarObjects[i].direction.clone();
+        const movement = direction.multiplyScalar(velocity);
+        cloudCarObjects[i].position.add(movement);
+
+        // Scale the cloud car with respect of its distance to the camera. 
+        const scaleFactor = previousCameraDistance / camera.position.distanceTo(cloudCarObjects[i].position);
+        cloudCarObjects[i].scale.set(previousScale.x * scaleFactor, previousScale.y * scaleFactor, previousScale.z * scaleFactor);
     }
-
-    const direction = cloudCarObject.direction.clone();
-    const movement = direction.multiplyScalar(velocity);
-    cloudCarObject.position.add(movement);
-
-    // Scale the cloud car with respect of its distance to the camera. 
-    const scaleFactor = previousCameraDistance / camera.position.distanceTo(cloudCarObject.position);
-    cloudCarObject.scale.set(previousScale.x * scaleFactor, previousScale.y * scaleFactor, previousScale.z * scaleFactor);
-    return cloudCarObject;
+    return cloudCarObjects;
 }
