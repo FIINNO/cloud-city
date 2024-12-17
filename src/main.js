@@ -50,7 +50,7 @@ modelLoader.load('scene.gltf', (gltf) => {
     mesh.position.set(200, -100, -1200);
     mesh.scale.set(0.05, 0.05, 0.05);
     scene.add(mesh);
-});
+}); 
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({antialias:true});
@@ -77,11 +77,11 @@ scene.add(axesHelper);
 // Camera path
 const cameraPathPoints = [
     new THREE.Vector3(-2000, 200, -3000),
-    new THREE.Vector3(-1800, 210, -2500),
-    new THREE.Vector3(-1600, 220, -2000),
+    new THREE.Vector3(-1800, 210, -2700),
+    new THREE.Vector3(-1600, 220, -2400),
     new THREE.Vector3(-1400, 230, -1800),
-    new THREE.Vector3(-1200, 240, -1600),
-    new THREE.Vector3(-1000, 250, -1400),
+    new THREE.Vector3(-1200, 240, -1200),   
+    new THREE.Vector3(-1000, 250, -1000),
 ];
 
 const cameraPath = new THREE.CatmullRomCurve3(cameraPathPoints);
@@ -101,11 +101,18 @@ window.addEventListener('scroll', () => {
     animateCamera();
 });
 
+const startLookAt = new THREE.Vector3(0, 0, 0);
+const targetLookAt = new THREE.Vector3(200, 0, -1200);
+
 function animateCamera() {
     const pointOnCurve = cameraPath.getPointAt(scrollProgress);
     camera.position.copy(pointOnCurve);
-
-    camera.lookAt(200, -100, -1200);
+    const currentLookAt = new THREE.Vector3().lerpVectors(
+        startLookAt,
+        targetLookAt,
+        Math.min(scrollProgress * 2, 1)
+    );
+    camera.lookAt(currentLookAt);
 }
 
 
