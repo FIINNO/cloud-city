@@ -91,7 +91,14 @@ const pathMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 });
 const pathLine = new THREE.Line(pathGeometry, pathMaterial);
 scene.add(pathLine);
 
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
 
+    renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+window.onresize = onWindowResize;
 
 animate();
 
