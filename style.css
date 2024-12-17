@@ -15,6 +15,47 @@ canvas {
 #ui-container {
     position: fixed;
     z-index: 10;
+    top: 1rem;
+    right: 0;
+}
+
+#control-menu-btn {
+    position: relative;
+    cursor: pointer;
+    right: 1rem;
+    top: 1rem;
+    z-index: 20;
+    transition: right 0.2s ease-in-out;
+}
+
+#control-menu-btn.open {
+    right: 240px;
+}
+
+#control-menu {
+    position: fixed;
+    top: 1rem;
+    right: -350px;
+    border: solid 2px #737373;
+    border-top-left-radius: 2rem;
+    border-bottom-left-radius: 2rem;
+    backdrop-filter: blur(10px);
+    height: 500px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    transition: right 0.2s ease-in-out;
+
+}
+
+#control-menu.visible {
+    right: 0;
+}
+
+
+#scroll-progress {
+    position: fixed;
+    z-index: 10;
     top: 0;
     left: 0;
 }
