@@ -53,6 +53,7 @@ modelLoader.load('./cloud_city_model/scene.gltf', (gltf) => {
     cloudCityObject = gltf.scene;
     cloudCityObject.position.set(200, -100, -1200);
     cloudCityObject.scale.set(0.05, 0.05, 0.05);
+    cloudCityObject.name = 'cloud_city';
     scene.add(cloudCityObject);
 });
 
@@ -61,7 +62,7 @@ modelLoader.load('./cloud_car_model/scene.gltf', (gltf) => {
     const cloudCarModel = gltf.scene;
     for(let i=0;i<3;++i){
         let cloudCarObject = cloudCarModel.clone();
-        cloudCarObject = animationUtils.randomCloudCarPosition(cloudCarObject, camera);
+        cloudCarObject = animationUtils.randomCloudCarPosition(cloudCarObject, camera, scene);
         cloudCarObject.visible = false;
         scene.add(cloudCarObject);
         cloudCarObjects[i] = cloudCarObject;
@@ -128,7 +129,7 @@ animate();
 
 const startInterval = () => {
     const intervalID = setInterval(() => {
-        cloudCarObjects = animationUtils.addCloudCar(cloudCarObjects);
+        cloudCarObjects = animationUtils.addCloudCar(cloudCarObjects, camera, scene);
     }, 10000);
 };
 
@@ -136,7 +137,7 @@ const startInterval = () => {
 // Animation loop
 function animate() {
     requestAnimationFrame(animate);
-    cloudCarObjects = animationUtils.animateCloudCars(cloudCarObjects, camera);
+    cloudCarObjects = animationUtils.animateCloudCars(cloudCarObjects, camera, scene);
     renderer.render(scene, camera);
 }
 
