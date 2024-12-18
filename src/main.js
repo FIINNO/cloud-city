@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Camera } from "./camera.js";
+import * as animationUtils from './animation-utils.js'
 
 
 // Scene setup
@@ -43,13 +44,27 @@ scene.add(sunHelper);
 
 // Model loader
 
-const modelLoader = new GLTFLoader(loadingManager).setPath('./models/cloud_city_model/');
-modelLoader.load('scene.gltf', (gltf) => {
-    const mesh = gltf.scene;
-    mesh.position.set(200, -100, -1200);
-    mesh.scale.set(0.05, 0.05, 0.05);
-    scene.add(mesh);
+var cloudCityObject;
+var cloudCarObject; 
+
+const modelLoader = new GLTFLoader(loadingManager).setPath('./models/');
+modelLoader.load('./cloud_city_model/scene.gltf', (gltf) => {
+    cloudCityObject = gltf.scene;
+    cloudCityObject.position.set(200, -100, -1200);
+    cloudCityObject.scale.set(0.05, 0.05, 0.05);
+    scene.add(cloudCityObject);
+});
+
+modelLoader.load('./cloud_car_model/scene.gltf', (gltf) => {
+    cloudCarObject = gltf.scene;
+    cloudCarObject.scale.set(0.5,0.5,0.5);
+    cloudCarObject.rotation.set(0, -Math.PI/2,0);
+    cloudCarObject.position.set(camera.position.x + 600, camera.position.y - 150, camera.position.z -100);
+    cloudCarObject.direction = new THREE.Vector3(0,0,1);
+    scene.add(cloudCarObject);
 }); 
+
+
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({antialias:true});
@@ -105,7 +120,7 @@ animate();
 // Animation loop
 function animate() {
     requestAnimationFrame(animate);
-
+    cloudCarObject = animationUtils.animateCloudCar(cloudCarObject, camera);
     renderer.render(scene, camera);
 
 }
