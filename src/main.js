@@ -10,10 +10,6 @@ import * as animationUtils from './animation-utils.js'
 const scene = new THREE.Scene();
 
 // Camera
-<<<<<<< HEAD
-let camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 45, 10000);
-camera.position.set(-2000, 200, -3000);
-=======
 const cameraObject = new Camera();
 const camera = cameraObject.getInstance();
 scene.add(camera);
@@ -29,9 +25,9 @@ loadingManager.onProgress = (url, loaded, total) => {
 }
 
 loadingManager.onLoad = () => {
+    startInterval();
     loadingScreen.style.display = 'none';
 }
->>>>>>> origin/main
 
 
 // Lightning
@@ -50,14 +46,9 @@ scene.add(sunHelper);
 // Model loader
 
 var cloudCityObject;
-var cloudCarObject; 
-var cloudCarObjects = [];
+var cloudCarObjects = new Array(3);
 
-<<<<<<< HEAD
-var modelLoader = new GLTFLoader().setPath('./models/');
-=======
 const modelLoader = new GLTFLoader(loadingManager).setPath('./models/');
->>>>>>> origin/main
 modelLoader.load('./cloud_city_model/scene.gltf', (gltf) => {
     cloudCityObject = gltf.scene;
     cloudCityObject.position.set(200, -100, -1200);
@@ -65,19 +56,20 @@ modelLoader.load('./cloud_city_model/scene.gltf', (gltf) => {
     scene.add(cloudCityObject);
 });
 
-<<<<<<< HEAD
-addCloudCar();
-=======
-modelLoader.load('./cloud_car_model/scene.gltf', (gltf) => {
-    cloudCarObject = gltf.scene;
-    cloudCarObject.scale.set(0.5,0.5,0.5);
-    cloudCarObject.rotation.set(0, -Math.PI/2,0);
-    cloudCarObject.position.set(camera.position.x + 600, camera.position.y - 150, camera.position.z -100);
-    cloudCarObject.direction = new THREE.Vector3(0,0,1);
-    scene.add(cloudCarObject);
-}); 
 
->>>>>>> origin/main
+modelLoader.load('./cloud_car_model/scene.gltf', (gltf) => {
+    const cloudCarModel = gltf.scene;
+    for(let i=0;i<3;++i){
+        let cloudCarObject = cloudCarModel.clone();
+        cloudCarObject = animationUtils.randomCloudCarPosition(cloudCarObject, camera);
+        cloudCarObject.visible = false;
+        scene.add(cloudCarObject);
+        cloudCarObjects[i] = cloudCarObject;
+    }
+    cloudCarObjects[0].visible = true;
+    console.log("Current amount of cloud cars is: ", cloudCarObjects.length);
+});
+
 
 
 // Renderer
@@ -94,7 +86,6 @@ const sphereGeometry = new THREE.SphereGeometry(5000, 60, 40);
 const sphereMaterial = new THREE.MeshBasicMaterial({
     map: texture,
     side: THREE.DoubleSide,
-    overdraw: 0.5
 }); 
 const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
 scene.add(sphere);
@@ -131,52 +122,22 @@ window.onresize = onWindowResize;
 
 animate();
 
-<<<<<<< HEAD
-
-function addCloudCarEvent(){
-    const probability = 1/1000;
-    const random = Math.random();
-    if(random<probability){
-        addCloudCar();
-    }
-    else{
-        return;
-    }
-}
-
-function addCloudCar(){
-    if(cloudCarObjects.length>2){
-        return;
-    }
-    console.log("Adding cloud car");
-    modelLoader.load('./cloud_car_model/scene.gltf', (gltf) => {
-        let cloudCar = gltf.scene;
-        cloudCar = animationUtils.randomCloudCarPosition(cloudCar, camera);
-        scene.add(cloudCar);
-        cloudCarObjects.push(cloudCar);
-        console.log("Current amount of cloud cars is: ", cloudCarObjects.length);
-    });
-    
-}
 
 
-setInterval(addCloudCar, 6000);
+
+
+const startInterval = () => {
+    const intervalID = setInterval(() => {
+        cloudCarObjects = animationUtils.addCloudCar(cloudCarObjects);
+    }, 10000);
+};
 
 
 // Animation loop
 function animate() {
-    //addCloudCarEvent();
-    cloudCarObjects = animationUtils.animateCloudCars(cloudCarObjects, camera, scene);
-    renderer.render(scene, camera);
     requestAnimationFrame(animate);
-=======
-// Animation loop
-function animate() {
-    requestAnimationFrame(animate);
-    cloudCarObject = animationUtils.animateCloudCar(cloudCarObject, camera);
+    cloudCarObjects = animationUtils.animateCloudCars(cloudCarObjects, camera);
     renderer.render(scene, camera);
-
->>>>>>> origin/main
 }
 
 
