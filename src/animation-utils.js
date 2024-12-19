@@ -3,7 +3,7 @@ import * as THREE from 'three';
 
 
 export function randomCloudCarPosition(cloudCarObject, camera, scene){
-    cloudCarObject.scale.set(0.5,0.5,0.5);
+    
     const cloudCityObject = scene.getObjectByName('cloud_city');
     
     const randomDirection = Math.random() < 0.5 ? "behind" : "right";
@@ -37,14 +37,20 @@ export function randomCloudCarPosition(cloudCarObject, camera, scene){
         }
 
 
-        cloudCarObject.direction = new THREE.Vector3(-1,0,0);
-
-        
+        cloudCarObject.direction = new THREE.Vector3(-1,0,0);        
         randomPosition.x = newPositionX;
         randomPosition.y = newPositionY;
         
         randomPosition.z = -Math.max(randomValueZ, nearPlane + 500)
         console.log("Z from the right: ", randomPosition.z);
+
+        const initialRotation = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI);
+        cloudCarObject.quaternion.copy(initialRotation);
+
+
+        const scaleFactor = 0.5*(2000 / Math.max(camera.position.distanceTo(cloudCarObject.position), 3000));
+        console.log("Scalefactor: ", scaleFactor);
+        cloudCarObject.scale.set(scaleFactor,scaleFactor,scaleFactor);
     }
     // Cloud car travels in from behind 
     else{
@@ -67,16 +73,23 @@ export function randomCloudCarPosition(cloudCarObject, camera, scene){
         randomPosition.x = newPositionX;
         randomPosition.y = newPositionY;
         randomPosition.z = camera.near + 100;
+
+        const initialRotation = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI/2);
+        cloudCarObject.quaternion.copy(initialRotation);
+
+        cloudCarObject.scale.set(0.5,0.5,0.5);
     }
     
     // TODO: Update the rotation of the cloud cars. Seems like they need rotation with pi/2
     // TODO: Fix the y-position of cars coming in from the right. Maybe split up isPositionValid or even better, pass the offsets in the separate if-else above. For cars coming in to the right the height should be inside the viewPlane? 
     let localDirection = cloudCarObject.direction.clone();
-    const worldDirection = localDirection.clone().applyQuaternion(camera.quaternion).normalize();
+    let worldDirection = localDirection.clone().applyQuaternion(camera.quaternion).normalize();
+    worldDirection.y = 0;
     cloudCarObject.direction = worldDirection;
 
-    const quaternion = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,0,-1), worldDirection);
-    cloudCarObject.quaternion.copy(quaternion);
+    // Rotate the object to its world direction.
+    const quaternion = new THREE.Quaternion().setFromUnitVectors(localDirection, worldDirection);
+    cloudCarObject.quaternion.multiply(quaternion);
 
     console.log(worldDirection, cloudCarObject.direction);
     
