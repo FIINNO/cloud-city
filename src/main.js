@@ -4,6 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Camera } from "./camera.js";
 import * as animationUtils from './animation-utils.js'
+import { StarDestroyer } from './star-destroyer.js';
 
 
 // Scene setup
@@ -14,10 +15,15 @@ const cameraObject = new Camera();
 const camera = cameraObject.getInstance();
 scene.add(camera);
 
+
 const loadingScreen = document.getElementById('loading-screen');
 const loadingBar = document.getElementById('loading-bar');
 
 const loadingManager = new THREE.LoadingManager();
+
+const starDestroyerObject = new StarDestroyer(loadingManager);
+var starDestroyerInstance;
+
 
 loadingManager.onProgress = (url, loaded, total) => {
     const progress = (loaded / total) * 100;
@@ -25,8 +31,13 @@ loadingManager.onProgress = (url, loaded, total) => {
 }
 
 loadingManager.onLoad = () => {
+    if (starDestroyerObject.getInstance()) {
+        starDestroyerInstance = starDestroyerObject.getInstance();
+        scene.add(starDestroyerInstance);
+    }
     startInterval();
     loadingScreen.style.display = 'none';
+    animate();
 }
 
 
@@ -55,6 +66,7 @@ modelLoader.load('./cloud_city_model/scene.gltf', (gltf) => {
     cloudCityObject.scale.set(0.05, 0.05, 0.05);
     cloudCityObject.name = 'cloud_city';
     scene.add(cloudCityObject);
+    console.log(cloudCityObject);
 });
 
 
@@ -71,6 +83,14 @@ modelLoader.load('./cloud_car_model/scene.gltf', (gltf) => {
     console.log("Current amount of cloud cars is: ", cloudCarObjects.length);
 });
 
+
+// var starDestroyerObject;
+// modelLoader.load('./star_destroyer_model/scene.gltf', (gltf) => {
+//     starDestroyerObject = gltf.scene;
+//     starDestroyerObject.scale.set(40,40,40);
+//     scene.add(starDestroyerObject);
+//     console.log("Star destroyer: ", starDestroyerObject);
+// });
 
 
 // Renderer
@@ -121,7 +141,7 @@ function onWindowResize() {
 
 window.onresize = onWindowResize;
 
-animate();
+//animate();
 
 
 
@@ -138,6 +158,7 @@ const startInterval = () => {
 function animate() {
     requestAnimationFrame(animate);
     cloudCarObjects = animationUtils.animateCloudCars(cloudCarObjects, camera, scene);
+    starDestroyerObject.update();
     renderer.render(scene, camera);
 }
 
