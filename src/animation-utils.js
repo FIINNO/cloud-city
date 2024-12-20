@@ -94,22 +94,23 @@ export function animateCloudCars(cloudCarObjects, camera, scene){
     const cloudCityObject = scene.getObjectByName('cloud_city');
     if(!cloudCarObjects){return;}    // Ensure cloudCarObject is defined...
     for(let i = 0; i<cloudCarObjects.length;++i){
-        if(!cloudCarObjects[i] || !cloudCarObjects[i].visible){continue;}
-        const previousScale = cloudCarObjects[i].scale;
-        const previousCameraDistance = camera.position.distanceTo(cloudCarObjects[i].position);
+        const cloudCarInstance = cloudCarObjects[i].getInstance();
+        if(!cloudCarInstance || !cloudCarInstance.visible){continue;}
+        const previousScale = cloudCarInstance.scale;
+        const previousCameraDistance = camera.position.distanceTo(cloudCarInstance.position);
         const velocity = 4;
-        if(cloudCarObjects[i].position.distanceTo(new THREE.Vector3(0,0,0))>4500){
-            cloudCarObjects[i].visible = false;
+        if(cloudCarInstance.position.distanceTo(new THREE.Vector3(0,0,0))>4500){
+            cloudCarInstance.visible = false;
             continue;
         }
 
-        const direction = cloudCarObjects[i].direction.clone();
+        const direction = cloudCarInstance.direction.clone();
         const movement = direction.multiplyScalar(velocity);
-        cloudCarObjects[i].position.add(movement);
+        cloudCarInstance.position.add(movement);
 
         // Scale the cloud car with respect of its distance to the camera. 
-        const scaleFactor = previousCameraDistance / camera.position.distanceTo(cloudCarObjects[i].position);
-        cloudCarObjects[i].scale.set(previousScale.x * scaleFactor, previousScale.y * scaleFactor, previousScale.z * scaleFactor);
+        const scaleFactor = previousCameraDistance / camera.position.distanceTo(cloudCarInstance.position);
+        cloudCarInstance.scale.set(previousScale.x * scaleFactor, previousScale.y * scaleFactor, previousScale.z * scaleFactor);
     }
     return cloudCarObjects;
 }
@@ -119,11 +120,12 @@ export function animateCloudCars(cloudCarObjects, camera, scene){
 export function addCloudCar(cloudCarObjects, camera, scene){
     if(!cloudCarObjects){return;}
     for(let i = 0; i<cloudCarObjects.length;++i){
-        if(!cloudCarObjects[i]){continue;}
+        let cloudCarInstance = cloudCarObjects[i].getInstance();
+        if(!cloudCarInstance){continue;}
 
-        if(!cloudCarObjects[i].visible){
-            cloudCarObjects[i] = randomCloudCarPosition(cloudCarObjects[i], camera, scene);
-            cloudCarObjects[i].visible = true;
+        if(!cloudCarInstance.visible){
+            cloudCarInstance = randomCloudCarPosition(cloudCarInstance, camera, scene);
+            cloudCarInstance.visible = true;
             return cloudCarObjects;
         }
     }

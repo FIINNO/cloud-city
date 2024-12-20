@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 
-
 export class StarDestroyer{
     constructor(loadingManager){
         this.modelLoader = new GLTFLoader(loadingManager).setPath('./models/');
@@ -24,9 +23,7 @@ export class StarDestroyer{
 
         this.path = new THREE.CatmullRomCurve3(this.anchorPathPoints);
         this.pathPoints = this.path.getPoints(3600);
-        this.travelDistance = 0;
-
-    
+        this.travelDistance = 0;    
     }
 
 

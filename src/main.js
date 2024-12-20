@@ -1,10 +1,10 @@
-
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Camera } from "./camera.js";
 import * as animationUtils from './animation-utils.js'
 import { StarDestroyer } from './star-destroyer.js';
+import { CloudCar } from './cloud-car.js';
 
 
 // Scene setup
@@ -22,23 +22,11 @@ const loadingBar = document.getElementById('loading-bar');
 const loadingManager = new THREE.LoadingManager();
 
 const starDestroyerObject = new StarDestroyer(loadingManager);
+var cloudCarObjects = new Array(3);
+
 var starDestroyerInstance;
 
 
-loadingManager.onProgress = (url, loaded, total) => {
-    const progress = (loaded / total) * 100;
-    loadingBar.style.width = `${progress}%`;
-}
-
-loadingManager.onLoad = () => {
-    if (starDestroyerObject.getInstance()) {
-        starDestroyerInstance = starDestroyerObject.getInstance();
-        scene.add(starDestroyerInstance);
-    }
-    startInterval();
-    loadingScreen.style.display = 'none';
-    animate();
-}
 
 
 // Lightning
@@ -57,7 +45,7 @@ scene.add(sunHelper);
 // Model loader
 
 var cloudCityObject;
-var cloudCarObjects = new Array(3);
+var cloudCarModel;
 
 const modelLoader = new GLTFLoader(loadingManager).setPath('./models/');
 modelLoader.load('./cloud_city_model/scene.gltf', (gltf) => {
@@ -71,26 +59,9 @@ modelLoader.load('./cloud_city_model/scene.gltf', (gltf) => {
 
 
 modelLoader.load('./cloud_car_model/scene.gltf', (gltf) => {
-    const cloudCarModel = gltf.scene;
-    for(let i=0;i<3;++i){
-        let cloudCarObject = cloudCarModel.clone();
-        cloudCarObject = animationUtils.randomCloudCarPosition(cloudCarObject, camera, scene);
-        cloudCarObject.visible = false;
-        scene.add(cloudCarObject);
-        cloudCarObjects[i] = cloudCarObject;
-    }
-    cloudCarObjects[0].visible = true;
-    console.log("Current amount of cloud cars is: ", cloudCarObjects.length);
+    cloudCarModel = gltf.scene;
 });
 
-
-// var starDestroyerObject;
-// modelLoader.load('./star_destroyer_model/scene.gltf', (gltf) => {
-//     starDestroyerObject = gltf.scene;
-//     starDestroyerObject.scale.set(40,40,40);
-//     scene.add(starDestroyerObject);
-//     console.log("Star destroyer: ", starDestroyerObject);
-// });
 
 
 // Renderer
@@ -141,10 +112,35 @@ function onWindowResize() {
 
 window.onresize = onWindowResize;
 
-//animate();
 
+loadingManager.onProgress = (url, loaded, total) => {
+    const progress = (loaded / total) * 100;
+    loadingBar.style.width = `${progress}%`;
+}
 
+loadingManager.onLoad = () => {
+    if (starDestroyerObject.getInstance()) {
+        starDestroyerInstance = starDestroyerObject.getInstance();
+        scene.add(starDestroyerInstance);
+    }
 
+    for(let i = 0; i<cloudCarObjects.length; ++i){
+        const cloudCarObject = new CloudCar(cloudCarModel);
+        let cloudCarInstance = cloudCarObject.getInstance();
+        cloudCarInstance = animationUtils.randomCloudCarPosition(cloudCarInstance, camera, scene);
+        if(i==0){
+            cloudCarInstance.visible = true;
+        }else{
+            cloudCarInstance.visible = false;
+        }
+        scene.add(cloudCarInstance);
+        cloudCarObjects[i] = cloudCarObject;
+    }
+
+    startInterval();
+    loadingScreen.style.display = 'none';
+    animate();
+}
 
 
 const startInterval = () => {
