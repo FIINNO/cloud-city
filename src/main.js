@@ -146,6 +146,7 @@ loadingManager.onLoad = () => {
 
     let cloudCarInstance = cloudCarObjects[0].getInstance();
     cloudCarInstance = animationUtils.randomCloudCarPosition(cloudCarInstance, camera, scene);
+    animationUtils.animateStarDestroyer(starDestroyerObject, camera);
     animate();
 }
 

@@ -131,3 +131,57 @@ export function addCloudCar(cloudCarObjects, camera, scene){
     }
     return cloudCarObjects;
 }
+
+
+
+export function animateStarDestroyer(starDestroyerObject, camera){
+    const nearPlane = camera.near;
+    //const randomValueZ = Math.random() * 500 + 1000;
+    const z = -3000;
+    const heightFar = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) * Math.abs(z);
+    const heightNear = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) * nearPlane;
+    const widthFar = heightFar * camera.aspect;
+    const widthNear = heightNear * camera.aspect;
+    const startX = -widthFar/2 - 300;
+    const startY = heightFar/2;
+    const endX = widthFar/2 + 300;
+
+    console.log(heightNear, widthNear);
+
+    const anchorPathPoints = [];
+    const numAnchorPathPoints = 20;
+
+    let deltaY = 10;
+    let y = startY;
+    for(let i = startX; i<endX;i+=100){
+        if(i<0){
+            const x = i;
+            y -= deltaY
+            const anchorPoint = camera.localToWorld(new THREE.Vector3(x,y,z));
+            anchorPathPoints.push(anchorPoint);
+        }
+        else{
+            const x = i
+            y += deltaY;
+            const anchorPoint = camera.localToWorld(new THREE.Vector3(x,y,z));
+            anchorPathPoints.push(anchorPoint);
+        }
+    }
+    const starDestroyerInstance = starDestroyerObject.getInstance();
+
+
+    starDestroyerInstance.direction = new THREE.Vector3(1,0,0);
+    let localDirection = starDestroyerInstance.direction.clone();
+    let worldDirection = localDirection.clone().applyQuaternion(camera.quaternion).normalize();
+    worldDirection.y = 0;
+    starDestroyerInstance.direction = worldDirection;
+
+    // Rotate the object to its world direction.
+    const quaternion = new THREE.Quaternion().setFromUnitVectors(localDirection, worldDirection);
+    starDestroyerInstance.quaternion.multiply(quaternion);
+
+
+    
+    console.log(anchorPathPoints);
+    starDestroyerObject.setPath(anchorPathPoints);
+}
