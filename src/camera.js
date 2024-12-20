@@ -4,7 +4,7 @@ export class Camera {
     constructor() {
         this.camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 45, 30000);
         this.camera.position.set(-2000, 200, -3000);
-        this.camera.lookAt(0, 0, 0);
+        this.camera.lookAt(-4500, 400, -3000);
 
         this.cameraPathPoints = [
             new THREE.Vector3(-2000, 200, -3000),
@@ -65,8 +65,23 @@ export class Camera {
             new THREE.Vector3(-2000, 200, -3000),
         ];
 
+        this.initialAnimationPoints = [
+            new THREE.Vector3(-3000, 400, -2000),
+            new THREE.Vector3(-2500, 300, -2500),
+            new THREE.Vector3(-2250, 250, -2750),
+            new THREE.Vector3(-2000, 200, -3000),
+        ]
+
+        this.initialAnimationActive = false;
+        this.initialAnimationProgress = 0;
+        this.initialAnimationDuration = 5;
+        this.easingFunction = (t) => t * (2 - t);
+        this.initialPath = new THREE.CatmullRomCurve3(this.initialAnimationPoints);
+        this.initialStartLookAt = new THREE.Vector3(-4500, 400, -3000);
+        this.initialTargetLookAt = new THREE.Vector3(0, 0, 0);
+
         this.cameraPath = new THREE.CatmullRomCurve3(this.cameraPathPoints);
-        this.startLookAt = new THREE.Vector3(0, 0, 0);
+        this.startLookAt = this.initialTargetLookAt;
         this.targetLookAt = new THREE.Vector3(200, 0, -1200);
 
 
@@ -91,6 +106,36 @@ export class Camera {
         );
         this.camera.lookAt(currentLookAt);
     }
+
+    startInitialAnimation() {
+        this.initialAnimationActive = true;
+        console.log("Starting");
+    }
+
+    initialAnimation(deltaTime) {
+        if(this.initialAnimationActive) {
+            this.initialAnimationProgress += deltaTime / this.initialAnimationDuration;
+
+            const easedProgress = this.easingFunction(Math.min(this.initialAnimationProgress, 1));
+
+            const pointOnCurve = this.initialPath.getPointAt(easedProgress);
+            this.camera.position.copy(pointOnCurve);
+
+            const currentLookAt = new THREE.Vector3().lerpVectors(
+                this.initialStartLookAt,
+                this.initialTargetLookAt,
+                easedProgress
+            );
+
+            this.camera.lookAt(currentLookAt);
+
+            if(this.initialAnimationProgress >= 1) {
+                this.initialAnimationActive = false;
+            }
+        }
+    }
+
+    
 
     getInstance() {
         return this.camera;
