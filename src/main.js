@@ -5,6 +5,7 @@ import { Camera } from "./camera.js";
 import * as animationUtils from './animation-utils.js'
 import { StarDestroyer } from './star-destroyer.js';
 import { CloudCar } from './cloud-car.js';
+import { computeMikkTSpaceTangents } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
 
 // Scene setup
@@ -129,6 +130,7 @@ loadingManager.onLoad = () => {
         let cloudCarInstance = cloudCarObject.getInstance();
         cloudCarInstance = animationUtils.randomCloudCarPosition(cloudCarInstance, camera, scene);
         if(i==0){
+            cloudCarInstance.position.set(0,0,0);
             cloudCarInstance.visible = true;
         }else{
             cloudCarInstance.visible = false;
@@ -139,6 +141,11 @@ loadingManager.onLoad = () => {
 
     startInterval();
     loadingScreen.style.display = 'none';
+    renderer.compile(scene, camera);
+    renderer.render(scene, camera);
+
+    let cloudCarInstance = cloudCarObjects[0].getInstance();
+    cloudCarInstance = animationUtils.randomCloudCarPosition(cloudCarInstance, camera, scene);
     animate();
 }
 
