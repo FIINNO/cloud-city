@@ -137,8 +137,8 @@ export function addCloudCar(cloudCarObjects, camera, scene){
 export function animateStarDestroyer(starDestroyerObject, camera){
     const nearPlane = camera.near;
     //const randomValueZ = Math.random() * 500 + 1000;
-    const z = -3000;
-    const heightFar = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) * Math.abs(z);
+    const depth = -3000;
+    const heightFar = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) * Math.abs(depth);
     const heightNear = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) * nearPlane;
     const widthFar = heightFar * camera.aspect;
     const widthNear = heightNear * camera.aspect;
@@ -153,10 +153,11 @@ export function animateStarDestroyer(starDestroyerObject, camera){
 
     let deltaY = 10;
     let y = startY;
+    let z = depth;
     for(let i = startX; i<endX;i+=100){
         if(i<0){
             const x = i;
-            y -= deltaY
+            y -= deltaY;
             const anchorPoint = camera.localToWorld(new THREE.Vector3(x,y,z));
             anchorPathPoints.push(anchorPoint);
         }

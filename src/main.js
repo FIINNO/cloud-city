@@ -22,9 +22,8 @@ const loadingBar = document.getElementById('loading-bar');
 
 const loadingManager = new THREE.LoadingManager();
 
-const starDestroyerObject = new StarDestroyer(loadingManager);
 var cloudCarObjects = new Array(3);
-
+var starDestroyerObject;
 var starDestroyerInstance;
 
 
@@ -45,22 +44,30 @@ scene.add(sunHelper);
 
 // Model loader
 
-var cloudCityObject;
+var cloudCityModel;
 var cloudCarModel;
+var starDestroyerModel;
 
 const modelLoader = new GLTFLoader(loadingManager).setPath('./models/');
 modelLoader.load('./cloud_city_model/scene.gltf', (gltf) => {
-    cloudCityObject = gltf.scene;
-    cloudCityObject.position.set(200, -100, -1200);
-    cloudCityObject.scale.set(0.05, 0.05, 0.05);
-    cloudCityObject.name = 'cloud_city';
-    scene.add(cloudCityObject);
-    console.log(cloudCityObject);
+    cloudCityModel = gltf.scene;
+    cloudCityModel.position.set(200, -100, -1200);
+    cloudCityModel.scale.set(0.05, 0.05, 0.05);
+    cloudCityModel.name = 'cloud_city';
+    scene.add(cloudCityModel);
+    console.log(cloudCityModel);
 });
 
 
 modelLoader.load('./cloud_car_model/scene.gltf', (gltf) => {
     cloudCarModel = gltf.scene;
+});
+
+modelLoader.load('./star_destroyer_model/scene.gltf', (gltf) => {
+    starDestroyerModel = gltf.scene;
+    starDestroyerModel.scale.set(20,20,20);
+    //this.starDestroyerObject.rotation.set(0,-Math.PI/2,0);
+    starDestroyerModel.visible = false;
 });
 
 
@@ -120,10 +127,9 @@ loadingManager.onProgress = (url, loaded, total) => {
 }
 
 loadingManager.onLoad = () => {
-    if (starDestroyerObject.getInstance()) {
-        starDestroyerInstance = starDestroyerObject.getInstance();
-        scene.add(starDestroyerInstance);
-    }
+    starDestroyerObject = new StarDestroyer(starDestroyerModel);
+    starDestroyerInstance = starDestroyerObject.getInstance();
+    scene.add(starDestroyerInstance);
 
     for(let i = 0; i<cloudCarObjects.length; ++i){
         const cloudCarObject = new CloudCar(cloudCarModel);
@@ -146,6 +152,7 @@ loadingManager.onLoad = () => {
 
     let cloudCarInstance = cloudCarObjects[0].getInstance();
     cloudCarInstance = animationUtils.randomCloudCarPosition(cloudCarInstance, camera, scene);
+    console.log("Star destroyer: ", starDestroyerObject.getInstance());
     animationUtils.animateStarDestroyer(starDestroyerObject, camera);
     animate();
 }

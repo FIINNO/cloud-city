@@ -3,14 +3,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 
 export class StarDestroyer{
-    constructor(loadingManager){
-        this.modelLoader = new GLTFLoader(loadingManager).setPath('./models/');
-        this.modelLoader.load('./star_destroyer_model/scene.gltf', (gltf) => {
-            this.starDestroyerObject = gltf.scene;
-            this.starDestroyerObject.scale.set(20,20,20);
-            //this.starDestroyerObject.rotation.set(0,-Math.PI/2,0);
-            this.starDestroyerObject.visible = false;
-        });
+    constructor(model){
+        this.starDestroyerObject = model.clone();
 
 
         // this.anchorPathPoints = [
@@ -33,7 +27,6 @@ export class StarDestroyer{
 
     update(){
         if(!this.path){return;}
-        this.travelDistance += 1;
         if(this.travelDistance<this.pathPoints.length){
             const pointOnCurve = this.pathPoints[this.travelDistance];
             this.starDestroyerObject.position.copy(pointOnCurve);
@@ -43,6 +36,15 @@ export class StarDestroyer{
             const pointOnCurve = this.pathPoints[this.travelDistance];
             this.starDestroyerObject.position.copy(pointOnCurve);
         }
+        if(this.travelDistance + 1 < this.pathPoints.length){
+            const newDirection = new THREE.Vector3();
+            newDirection.subVectors(this.pathPoints[this.travelDistance+1], this.pathPoints[this.travelDistance]).normalize();
+            newDirection.y = 0;
+            const quaternion = new THREE.Quaternion().setFromUnitVectors(this.starDestroyerObject.direction.normalize(), newDirection);
+            this.starDestroyerObject.quaternion.multiply(quaternion);
+            this.starDestroyerObject.direction = newDirection;
+        }       
+        this.travelDistance += 1;
     }
 
     setPath(anchorPathPoints){
