@@ -47,12 +47,19 @@ loadingManager.onLoad = () => {
 
 // Model loader
 
-const cloudCityController = new CloudCity(loadingManager, scene);
 
 var cloudCarObject; 
 
 
+const modelLoader = new GLTFLoader(loadingManager).setPath('./models/');
 
+modelLoader.load('./cloud_city_model/scene.gltf', (gltf) => {
+    cloudCityModel = gltf.scene;
+    cloudCityModel.position.set(200, -100, -1200);
+    cloudCityModel.scale.set(0.05, 0.05, 0.05);
+    cloudCityModel.name = 'cloud_city';
+    scene.add(cloudCityModel);
+});
 
 modelLoader.load('./cloud_car_model/scene.gltf', (gltf) => {
     cloudCarObject = gltf.scene;
