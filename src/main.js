@@ -175,6 +175,18 @@ const startInterval = () => {
 };
 
 
+const toggleSunLightBtn = document.getElementById("toggle-sunlight");
+const toggleAmbientLightBtn = document.getElementById("toggle-ambient-light");
+
+toggleSunLightBtn.addEventListener("click", () => {
+    sunLight.visible = !sunLight.visible;
+});
+toggleAmbientLightBtn.addEventListener("click", () => {
+    ambientLight.visible = !ambientLight.visible;
+});
+
+
+
 // Animation loop
 function animate() {
     

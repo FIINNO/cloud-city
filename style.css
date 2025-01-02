@@ -69,8 +69,10 @@ canvas {
 .button-container {
     display: flex;
     align-items: center;
+    justify-content: end;
     gap: 1rem;
-    width: 50%;
+    width: 100%;
+    margin-right: 4rem;
 }
 
 .ui-button {
