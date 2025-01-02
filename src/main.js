@@ -47,11 +47,6 @@ loadingManager.onProgress = (url, loaded, total) => {
     loadingBar.style.width = `${progress}%`;
 }
 
-loadingManager.onLoad = () => {
-    loadingScreen.style.display = 'none';
-    cameraController.startInitialAnimation();
-}
-
 
 // Model loader
 
@@ -139,6 +134,7 @@ loadingManager.onProgress = (url, loaded, total) => {
 }
 
 loadingManager.onLoad = () => {
+    cameraController.startInitialAnimation();
     starDestroyerObject = new StarDestroyer(starDestroyerModel);
     starDestroyerInstance = starDestroyerObject.getInstance();
     scene.add(starDestroyerInstance);
@@ -161,7 +157,7 @@ loadingManager.onLoad = () => {
     loadingScreen.style.display = 'none';
     renderer.compile(scene, camera);
     renderer.render(scene, camera);
-
+    
     let cloudCarInstance = cloudCarObjects[0].getInstance();
     cloudCarInstance = animationUtils.randomCloudCarPosition(cloudCarInstance, camera, scene);
     console.log("Star destroyer: ", starDestroyerObject.getInstance());
@@ -180,12 +176,13 @@ const startInterval = () => {
 // Animation loop
 let lastTime = performance.now();
 function animate() {
-    cloudCarObjects = animationUtils.animateCloudCars(cloudCarObjects, camera, scene);
-    starDestroyerObject.update();
     const currentTime = performance.now();
     const deltaTime = (currentTime - lastTime) / 1000;
     lastTime = currentTime;
     cameraController.initialAnimation(deltaTime);
+
+    cloudCarObjects = animationUtils.animateCloudCars(cloudCarObjects, camera, scene);
+    starDestroyerObject.update();
     
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
