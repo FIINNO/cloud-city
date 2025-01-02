@@ -23,6 +23,8 @@ const loadingBar = document.getElementById('loading-bar');
 
 const loadingManager = new THREE.LoadingManager();
 
+var cloudCityObject;
+var cloudCityInstance;
 var cloudCarObjects = new Array(3);
 var starDestroyerObject;
 var starDestroyerInstance;
@@ -134,6 +136,9 @@ loadingManager.onProgress = (url, loaded, total) => {
 }
 
 loadingManager.onLoad = () => {
+    cloudCityObject = new CloudCity(cloudCityModel);
+    cloudCityInstance = cloudCityObject.getInstance();
+    scene.add(cloudCityInstance);
     cameraController.startInitialAnimation();
     starDestroyerObject = new StarDestroyer(starDestroyerModel);
     starDestroyerInstance = starDestroyerObject.getInstance();
