@@ -4,7 +4,7 @@ export class Camera {
     constructor() {
         this.camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 45, 30000);
         this.camera.position.set(-2000, 200, -3000);
-        this.camera.lookAt(-4500, 400, -3000);
+        this.camera.lookAt(0, 0, 0);
 
         this.cameraPathPoints = [
             new THREE.Vector3(-2000, 200, -3000),
@@ -112,6 +112,7 @@ export class Camera {
     startInitialAnimation() {
         this.initialAnimationActive = true;
         console.log("Starting");
+        this.camera.lookAt(-4500, 400, -3000);
         this.initialAnimation();
     }
 
