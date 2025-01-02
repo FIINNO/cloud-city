@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Camera } from "./camera.js";
+import { CloudCity } from './cloud-city.js';
 import * as animationUtils from './animation-utils.js'
 import { StarDestroyer } from './star-destroyer.js';
 import { CloudCar } from './cloud-car.js';
@@ -12,8 +13,8 @@ import { computeMikkTSpaceTangents } from 'three/examples/jsm/utils/BufferGeomet
 const scene = new THREE.Scene();
 
 // Camera
-const cameraObject = new Camera();
-const camera = cameraObject.getInstance();
+const cameraController = new Camera();
+const camera = cameraController.getInstance();
 scene.add(camera);
 
 
@@ -27,19 +28,29 @@ var starDestroyerObject;
 var starDestroyerInstance;
 
 
-
-
 // Lightning
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
 scene.add(ambientLight);
 
-const sunLight = new THREE.DirectionalLight(0xffffff, 5.0);
+const sunLight = new THREE.DirectionalLight(0xffffff, 6.0);
 sunLight.position.set(-3500,1000.0,5000);
 sunLight.castShadow = true;
 scene.add(sunLight);
 
 const sunHelper = new THREE.DirectionalLightHelper(sunLight, 100);
 scene.add(sunHelper);
+
+
+
+loadingManager.onProgress = (url, loaded, total) => {
+    const progress = (loaded / total) * 100;
+    loadingBar.style.width = `${progress}%`;
+}
+
+loadingManager.onLoad = () => {
+    loadingScreen.style.display = 'none';
+    cameraController.startInitialAnimation();
+}
 
 
 // Model loader
@@ -49,6 +60,7 @@ var cloudCarModel;
 var starDestroyerModel;
 
 const modelLoader = new GLTFLoader(loadingManager).setPath('./models/');
+
 modelLoader.load('./cloud_city_model/scene.gltf', (gltf) => {
     cloudCityModel = gltf.scene;
     cloudCityModel.position.set(200, -100, -1200);
@@ -114,7 +126,7 @@ scene.add(pathLine);
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-
+    
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
@@ -166,11 +178,20 @@ const startInterval = () => {
 
 
 // Animation loop
+let lastTime = performance.now();
 function animate() {
-    requestAnimationFrame(animate);
     cloudCarObjects = animationUtils.animateCloudCars(cloudCarObjects, camera, scene);
     starDestroyerObject.update();
+    const currentTime = performance.now();
+    const deltaTime = (currentTime - lastTime) / 1000;
+    lastTime = currentTime;
+    cameraController.initialAnimation(deltaTime);
+    
     renderer.render(scene, camera);
+    requestAnimationFrame(animate);
+    
 }
+animate();
+
 
 
