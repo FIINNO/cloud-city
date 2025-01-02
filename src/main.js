@@ -161,7 +161,6 @@ loadingManager.onLoad = () => {
     renderer.render(scene, camera);
 
     cameraController.startInitialAnimation();
-    cameraController.initialAnimation();
     
     let cloudCarInstance = cloudCarObjects[0].getInstance();
     cloudCarInstance = animationUtils.randomCloudCarPosition(cloudCarInstance, camera, scene);

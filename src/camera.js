@@ -74,8 +74,11 @@ export class Camera {
 
         this.initialAnimationActive = false;
         this.initialAnimationProgress = 0;
+        this.elapsedTime = 0;
         this.initialAnimationDuration = 5;
         this.easingFunction = (t) => t * (2 - t);
+
+
         this.initialPath = new THREE.CatmullRomCurve3(this.initialAnimationPoints);
         this.initialStartLookAt = new THREE.Vector3(-4500, 400, -3000);
         this.initialTargetLookAt = new THREE.Vector3(0, 0, 0);
@@ -83,7 +86,6 @@ export class Camera {
         this.cameraPath = new THREE.CatmullRomCurve3(this.cameraPathPoints);
         this.startLookAt = this.initialTargetLookAt;
         this.targetLookAt = new THREE.Vector3(200, 0, -1200);
-
 
         this.scrollProgress = 0;
         let scrollProgressElement = document.getElementById('scroll-progress');
@@ -109,33 +111,35 @@ export class Camera {
 
     startInitialAnimation() {
         this.initialAnimationActive = true;
+        console.log("Starting");
+        this.initialAnimation();
     }
 
     initialAnimation() {
-        let lastTime = performance.now();
-        while(this.initialAnimationActive) {
-            const currentTime = performance.now();
-            const deltaTime = (currentTime - lastTime) / 1000;
-            lastTime = currentTime;
-            this.initialAnimationProgress += deltaTime / this.initialAnimationDuration;
 
-            const easedProgress = this.easingFunction(Math.min(this.initialAnimationProgress, 1));
+        if(!this.initialAnimationActive) { return; }
 
-            const pointOnCurve = this.initialPath.getPointAt(easedProgress);
-            this.camera.position.copy(pointOnCurve);
+        this.elapsedTime += 1 / 60;
+        this.initialAnimationProgress = Math.min(this.elapsedTime / this.initialAnimationDuration, 1)
 
-            const currentLookAt = new THREE.Vector3().lerpVectors(
-                this.initialStartLookAt,
-                this.initialTargetLookAt,
-                easedProgress
-            );
+        const easedProgress = this.easingFunction(Math.min(this.initialAnimationProgress, 1));
 
-            this.camera.lookAt(currentLookAt);
+        const pointOnCurve = this.initialPath.getPointAt(easedProgress);
+        this.camera.position.copy(pointOnCurve);
+
+        const currentLookAt = new THREE.Vector3().lerpVectors(
+            this.initialStartLookAt,
+            this.initialTargetLookAt,
+            easedProgress
+        );
+
+        this.camera.lookAt(currentLookAt);
     
-            if(this.initialAnimationProgress >= 1) {
-                this.initialAnimationActive = false;
-            }
+        if(this.initialAnimationProgress >= 1) {
+            this.initialAnimationActive = false;
+            return;
         }
+        requestAnimationFrame(() => this.initialAnimation());
     }
 
     
