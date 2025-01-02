@@ -53,7 +53,7 @@ var cloudCarObject;
 
 
 
-/*
+
 modelLoader.load('./cloud_car_model/scene.gltf', (gltf) => {
     cloudCarObject = gltf.scene;
     cloudCarObject.scale.set(0.5,0.5,0.5);
@@ -61,7 +61,7 @@ modelLoader.load('./cloud_car_model/scene.gltf', (gltf) => {
     cloudCarObject.position.set(camera.position.x + 600, camera.position.y - 150, camera.position.z -100);
     cloudCarObject.direction = new THREE.Vector3(0,0,1);
     scene.add(cloudCarObject);
-    }); */
+    });
     
     
     
@@ -106,15 +106,10 @@ modelLoader.load('./cloud_car_model/scene.gltf', (gltf) => {
 
 window.onresize = onWindowResize;
 
-function preRender() {
-    
-}
-
-
 // Animation loop
 let lastTime = performance.now();
 function animate() {
-    //cloudCarObject = animationUtils.animateCloudCar(cloudCarObject, camera);
+    cloudCarObject = animationUtils.animateCloudCar(cloudCarObject, camera);
     const currentTime = performance.now();
     const deltaTime = (currentTime - lastTime) / 1000;
     lastTime = currentTime;
