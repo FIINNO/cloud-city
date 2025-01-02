@@ -1,12 +1,23 @@
 * {
     margin: 0;
     padding: 0;
+    
 }
 
 body {
     height: 300vh;
 }
 
+/* Hide scrollbar for Chrome, Safari and Opera */
+html::-webkit-scrollbar {
+    display: none;
+}
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+html {
+-ms-overflow-style: none;  /* IE and Edge */
+scrollbar-width: none;  /* Firefox */
+}
 
 canvas {
     position: fixed;
@@ -44,12 +55,31 @@ canvas {
     width: 300px;
     display: flex;
     flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    padding-top: 5rem;
     transition: right 0.2s ease-in-out;
 
 }
 
 #control-menu.visible {
-    right: 0;
+    right: -2px;
+}
+
+.button-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 50%;
+}
+
+.ui-button {
+    width: 5rem;
+    height: 3rem;
+    background: none;
+    border: solid 2px #737373;
+    border-radius: 1rem;
+    cursor: pointer;
 }
 
 

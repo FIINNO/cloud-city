@@ -101,7 +101,7 @@ const axesHelper = new THREE.AxesHelper(100);
 scene.add(axesHelper);
 
 // Camera path
-const cameraPathPoints = [
+/*const cameraPathPoints = [
     new THREE.Vector3(-2000, 200, -3000),
     new THREE.Vector3(-1800, 210, -2700),
     new THREE.Vector3(-1600, 220, -2400),
@@ -116,7 +116,7 @@ const pathPoints = cameraPath.getPoints(50);
 const pathGeometry = new THREE.BufferGeometry().setFromPoints(pathPoints);
 const pathMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 });
 const pathLine = new THREE.Line(pathGeometry, pathMaterial);
-scene.add(pathLine);
+scene.add(pathLine); */
 
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
