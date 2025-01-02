@@ -159,12 +159,10 @@ loadingManager.onLoad = () => {
     loadingScreen.style.display = 'none';
     renderer.compile(scene, camera);
     renderer.render(scene, camera);
-
     cameraController.startInitialAnimation();
     
     let cloudCarInstance = cloudCarObjects[0].getInstance();
     cloudCarInstance = animationUtils.randomCloudCarPosition(cloudCarInstance, camera, scene);
-    console.log("Star destroyer: ", starDestroyerObject.getInstance());
     animationUtils.animateStarDestroyer(starDestroyerObject, camera);
     animate();
 }
