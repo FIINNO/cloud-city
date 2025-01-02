@@ -109,11 +109,14 @@ export class Camera {
 
     startInitialAnimation() {
         this.initialAnimationActive = true;
-        console.log("Starting");
     }
 
-    initialAnimation(deltaTime) {
-        if(this.initialAnimationActive) {
+    initialAnimation() {
+        let lastTime = performance.now();
+        while(this.initialAnimationActive) {
+            const currentTime = performance.now();
+            const deltaTime = (currentTime - lastTime) / 1000;
+            lastTime = currentTime;
             this.initialAnimationProgress += deltaTime / this.initialAnimationDuration;
 
             const easedProgress = this.easingFunction(Math.min(this.initialAnimationProgress, 1));
@@ -128,7 +131,7 @@ export class Camera {
             );
 
             this.camera.lookAt(currentLookAt);
-
+    
             if(this.initialAnimationProgress >= 1) {
                 this.initialAnimationActive = false;
             }

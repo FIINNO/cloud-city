@@ -63,8 +63,6 @@ modelLoader.load('./cloud_city_model/scene.gltf', (gltf) => {
     cloudCityModel.position.set(200, -100, -1200);
     cloudCityModel.scale.set(0.05, 0.05, 0.05);
     cloudCityModel.name = 'cloud_city';
-    scene.add(cloudCityModel);
-    console.log(cloudCityModel);
 });
 
 
@@ -139,7 +137,6 @@ loadingManager.onLoad = () => {
     cloudCityObject = new CloudCity(cloudCityModel);
     cloudCityInstance = cloudCityObject.getInstance();
     scene.add(cloudCityInstance);
-    cameraController.startInitialAnimation();
     starDestroyerObject = new StarDestroyer(starDestroyerModel);
     starDestroyerInstance = starDestroyerObject.getInstance();
     scene.add(starDestroyerInstance);
@@ -162,6 +159,9 @@ loadingManager.onLoad = () => {
     loadingScreen.style.display = 'none';
     renderer.compile(scene, camera);
     renderer.render(scene, camera);
+
+    cameraController.startInitialAnimation();
+    cameraController.initialAnimation();
     
     let cloudCarInstance = cloudCarObjects[0].getInstance();
     cloudCarInstance = animationUtils.randomCloudCarPosition(cloudCarInstance, camera, scene);
@@ -179,13 +179,8 @@ const startInterval = () => {
 
 
 // Animation loop
-let lastTime = performance.now();
 function animate() {
-    const currentTime = performance.now();
-    const deltaTime = (currentTime - lastTime) / 1000;
-    lastTime = currentTime;
-    cameraController.initialAnimation(deltaTime);
-
+    
     cloudCarObjects = animationUtils.animateCloudCars(cloudCarObjects, camera, scene);
     starDestroyerObject.update();
     
@@ -193,7 +188,7 @@ function animate() {
     requestAnimationFrame(animate);
     
 }
-animate();
+//animate();
 
 
 
