@@ -163,7 +163,6 @@ loadingManager.onLoad = () => {
     
     let cloudCarInstance = cloudCarObjects[0].getInstance();
     cloudCarInstance = animationUtils.randomCloudCarPosition(cloudCarInstance, camera, scene);
-    animationUtils.animateStarDestroyer(starDestroyerObject, camera);
     animate();
 }
 
@@ -177,12 +176,20 @@ const startInterval = () => {
 
 const toggleSunLightBtn = document.getElementById("toggle-sunlight");
 const toggleAmbientLightBtn = document.getElementById("toggle-ambient-light");
+const toggleStarDestroyerBtn = document.getElementById("toggle-star-destroyer");
 
 toggleSunLightBtn.addEventListener("click", () => {
     sunLight.visible = !sunLight.visible;
 });
 toggleAmbientLightBtn.addEventListener("click", () => {
     ambientLight.visible = !ambientLight.visible;
+});
+toggleStarDestroyerBtn.addEventListener("click", () => {
+    if(!starDestroyerObject.hasAnimation()){
+        console.log("Calling in star destroyer...");
+        starDestroyerObject.toggleAnimation();
+        animationUtils.animateStarDestroyer(starDestroyerObject, camera);
+    }    
 });
 
 

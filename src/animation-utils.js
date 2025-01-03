@@ -40,7 +40,7 @@ export function randomCloudCarPosition(cloudCarObject, camera, scene){
         cloudCarObject.quaternion.copy(initialRotation);
 
 
-        const scaleFactor = 0.4*(2000 / Math.max(camera.position.distanceTo(cloudCarObject.position), 3000));
+        const scaleFactor = 0.3*(2000 / Math.max(camera.position.distanceTo(cloudCarObject.position), 3000));
         cloudCarObject.scale.set(scaleFactor,scaleFactor,scaleFactor);
     }
     // Cloud car travels in from behind 
@@ -69,7 +69,7 @@ export function randomCloudCarPosition(cloudCarObject, camera, scene){
         cloudCarObject.quaternion.copy(initialRotation);
 
         //cloudCarObject.scale.set(0.5,0.5,0.5);
-        cloudCarObject.scale.set(0.4,0.4,0.4);
+        cloudCarObject.scale.set(0.3,0.3,0.3);
     }
     
     let localDirection = cloudCarObject.direction.clone();
@@ -151,7 +151,8 @@ export function animateStarDestroyer(starDestroyerObject, camera){
     const widthNear = heightNear * camera.aspect;
     const startX = -widthFar/2 - 300;
     const startY = heightFar/2;
-    const endX = widthFar/2 + 300;
+    //const endX = widthFar/2 + 300;
+    const endX = 6000;
 
     const anchorPathPoints = [];
 
@@ -174,7 +175,7 @@ export function animateStarDestroyer(starDestroyerObject, camera){
     }
     const starDestroyerInstance = starDestroyerObject.getInstance();
 
-
+    starDestroyerInstance.quaternion.set(0, 0, 0, 1);
     starDestroyerInstance.direction = new THREE.Vector3(1,0,0);
     let localDirection = starDestroyerInstance.direction.clone();
     let worldDirection = localDirection.clone().applyQuaternion(camera.quaternion).normalize();

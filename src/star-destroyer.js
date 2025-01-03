@@ -5,33 +5,30 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 export class StarDestroyer{
     constructor(model){
         this.starDestroyerObject = model.clone();
-
-
-        // this.anchorPathPoints = [
-        //     new THREE.Vector3(1000,800,-2000),
-        //     new THREE.Vector3(1000,700, -1700),
-        //     new THREE.Vector3(1000,600, -1500),
-        //     new THREE.Vector3(1000,500, -1200),
-        //     new THREE.Vector3(1000,400,-1000),
-        //     new THREE.Vector3(1000,300,-800),
-        // ];
-
-        // this.path = new THREE.CatmullRomCurve3(this.anchorPathPoints);
-        // this.pathPoints = this.path.getPoints(3600);
         this.travelDistance = 0;    
         this.anchorPathPoints;
         this.path;
         this.pathPoints;
+        this.animationToggled = false;
+    }
+
+    toggleAnimation(){
+        this.animationToggled = true;
+    }
+
+    hasAnimation(){
+        return this.animationToggled;
     }
 
 
     update(){
-        if(!this.path){return;}
+        if(!this.path || !this.animationToggled){return;}
         if(this.travelDistance<this.pathPoints.length){
             const pointOnCurve = this.pathPoints[this.travelDistance];
             this.starDestroyerObject.position.copy(pointOnCurve);
         }
         else{
+            this.animationToggled = false;
             this.travelDistance = 0;
             const pointOnCurve = this.pathPoints[this.travelDistance];
             this.starDestroyerObject.position.copy(pointOnCurve);
@@ -43,12 +40,21 @@ export class StarDestroyer{
             const quaternion = new THREE.Quaternion().setFromUnitVectors(this.starDestroyerObject.direction.normalize(), newDirection);
             this.starDestroyerObject.quaternion.multiply(quaternion);
             this.starDestroyerObject.direction = newDirection;
-        }       
+        }
+        if(this.starDestroyerObject.position.distanceTo(new THREE.Vector3(0,0,0))>4400){
+            const scaleFactor = 0.99;
+            this.starDestroyerObject.scale.set(this.starDestroyerObject.scale.x*scaleFactor, this.starDestroyerObject.scale.y*scaleFactor, this.starDestroyerObject.scale.z*scaleFactor);
+        }        
+        if(!this.animationToggled){
+            this.starDestroyerObject.visible = false;
+            return;
+        }
         this.travelDistance += 1;
     }
 
     setPath(anchorPathPoints){
         this.starDestroyerObject.visible = true;
+        this.starDestroyerObject.scale.set(20,20,20);
         this.anchorPathPoints = anchorPathPoints;
         this.path = new THREE.CatmullRomCurve3(this.anchorPathPoints);
         this.pathPoints = this.path.getPoints(3600);
