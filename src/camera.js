@@ -94,6 +94,11 @@ export class Camera {
         window.addEventListener('scroll', () => {
             const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
             this.animationProgress = window.scrollY / maxScroll;
+
+            if(this.animationProgress >= 1) {
+                this.animationProgress = 0;
+                window.scrollTo(0, 0);
+            }
             this.update();
         });
     }
