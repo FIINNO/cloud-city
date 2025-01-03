@@ -177,12 +177,17 @@ const startInterval = () => {
 
 const toggleSunLightBtn = document.getElementById("toggle-sunlight");
 const toggleAmbientLightBtn = document.getElementById("toggle-ambient-light");
+const toggleCamAnimBtn = document.getElementById("toggle-cam-animation");
 
 toggleSunLightBtn.addEventListener("click", () => {
     sunLight.visible = !sunLight.visible;
 });
 toggleAmbientLightBtn.addEventListener("click", () => {
     ambientLight.visible = !ambientLight.visible;
+});
+
+toggleCamAnimBtn.addEventListener("click", () => {
+    cameraController.toggleAnimation();
 });
 
 

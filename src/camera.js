@@ -77,7 +77,7 @@ export class Camera {
         this.elapsedTime = 0;
         this.initialAnimationDuration = 5;
         this.easingFunction = (t) => t * (2 - t);
-
+        this.easing = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
         this.initialPath = new THREE.CatmullRomCurve3(this.initialAnimationPoints);
         this.initialStartLookAt = new THREE.Vector3(-4500, 400, -3000);
@@ -87,26 +87,56 @@ export class Camera {
         this.startLookAt = this.initialTargetLookAt;
         this.targetLookAt = new THREE.Vector3(200, 0, -1200);
 
-        this.scrollProgress = 0;
-        let scrollProgressElement = document.getElementById('scroll-progress');
+        this.isAnimating = false;
+        this.animationProgress = 0;
+        this.duration = 30;
 
         window.addEventListener('scroll', () => {
             const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-            this.scrollProgress = window.scrollY / maxScroll;
-            scrollProgressElement.innerText = "Scroll Progress: " + this.scrollProgress.toFixed(2);
+            this.animationProgress = window.scrollY / maxScroll;
             this.update();
         });
     }
 
     update() {
-        const pointOnCurve = this.cameraPath.getPointAt(this.scrollProgress);
+        const pointOnCurve = this.cameraPath.getPointAt(this.animationProgress);
         this.camera.position.copy(pointOnCurve);
-        const currentLookAt = new THREE.Vector3().lerpVectors(
-            this.startLookAt,
-            this.targetLookAt,
-            Math.min(this.scrollProgress * 2, 1)
-        );
+        let currentLookAt;
+        if(this.animationProgress < 0.5) {
+            currentLookAt = new THREE.Vector3().lerpVectors(
+                this.startLookAt,
+                this.targetLookAt,
+                Math.min(this.animationProgress * 2, 1)
+            );
+        } else {
+            currentLookAt = new THREE.Vector3().lerpVectors(
+                this.targetLookAt,
+                this.startLookAt,
+                Math.min((this.animationProgress - 0.5) * 2, 1)
+            );
+        }
         this.camera.lookAt(currentLookAt);
+    }
+
+    toggleAnimation() {
+        this.isAnimating = !this.isAnimating;
+        this.animate();
+    }
+
+    animate() {
+        if(!this.isAnimating) { return; }
+
+        const deltaTime = 1 / 60;
+        this.animationProgress += deltaTime / this.duration;
+
+        if(this.animationProgress >= 1) {
+            this.animationProgress = 0;
+        }
+        
+        this.update();
+
+        requestAnimationFrame(() => this.animate());
+        
     }
 
     startInitialAnimation() {

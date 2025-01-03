@@ -84,14 +84,6 @@ canvas {
     cursor: pointer;
 }
 
-
-#scroll-progress {
-    position: fixed;
-    z-index: 10;
-    top: 0;
-    left: 0;
-}
-
 #loading-screen {
     position: fixed;
     height: 100vh;
