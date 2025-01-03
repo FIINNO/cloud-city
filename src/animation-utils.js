@@ -40,7 +40,7 @@ export function randomCloudCarPosition(cloudCarObject, camera, scene){
         cloudCarObject.quaternion.copy(initialRotation);
 
 
-        const scaleFactor = 0.5*(2000 / Math.max(camera.position.distanceTo(cloudCarObject.position), 3000));
+        const scaleFactor = 0.3*(2000 / Math.max(camera.position.distanceTo(cloudCarObject.position), 3000));
         cloudCarObject.scale.set(scaleFactor,scaleFactor,scaleFactor);
     }
     // Cloud car travels in from behind 
@@ -68,7 +68,8 @@ export function randomCloudCarPosition(cloudCarObject, camera, scene){
         const initialRotation = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI/2);
         cloudCarObject.quaternion.copy(initialRotation);
 
-        cloudCarObject.scale.set(0.5,0.5,0.5);
+        //cloudCarObject.scale.set(0.5,0.5,0.5);
+        cloudCarObject.scale.set(0.3,0.3,0.3);
     }
     
     let localDirection = cloudCarObject.direction.clone();
@@ -97,9 +98,9 @@ export function animateCloudCars(cloudCarObjects, camera, scene){
         const cloudCarInstance = cloudCarObjects[i].getInstance();
         if(!cloudCarInstance || !cloudCarInstance.visible){continue;}
         const previousScale = cloudCarInstance.scale;
-        const previousCameraDistance = camera.position.distanceTo(cloudCarInstance.position);
+        const previousCameraDistance =  camera.position.distanceTo(cloudCarInstance.position);
         const velocity = 4;
-        if(cloudCarInstance.position.distanceTo(new THREE.Vector3(0,0,0))>4500){
+        if(cloudCarInstance.position.distanceTo(new THREE.Vector3(0,0,0))>4800 && previousScale.x < 0.01){
             cloudCarInstance.visible = false;
             continue;
         }
@@ -108,8 +109,14 @@ export function animateCloudCars(cloudCarObjects, camera, scene){
         const movement = direction.multiplyScalar(velocity);
         cloudCarInstance.position.add(movement);
 
-        // Scale the cloud car with respect of its distance to the camera. 
-        const scaleFactor = previousCameraDistance / camera.position.distanceTo(cloudCarInstance.position);
+        let scaleFactor;
+        if(cloudCarInstance.position.distanceTo(cloudCityObject.position)<400){
+            scaleFactor = 0.999;
+        }
+        else{
+            scaleFactor = previousCameraDistance / camera.position.distanceTo(cloudCarInstance.position);
+        }
+        
         cloudCarInstance.scale.set(previousScale.x * scaleFactor, previousScale.y * scaleFactor, previousScale.z * scaleFactor);
     }
     return cloudCarObjects;
@@ -144,12 +151,10 @@ export function animateStarDestroyer(starDestroyerObject, camera){
     const widthNear = heightNear * camera.aspect;
     const startX = -widthFar/2 - 300;
     const startY = heightFar/2;
-    const endX = widthFar/2 + 300;
-
-    console.log(heightNear, widthNear);
+    //const endX = widthFar/2 + 300;
+    const endX = 6000;
 
     const anchorPathPoints = [];
-    const numAnchorPathPoints = 20;
 
     let deltaY = 10;
     let y = startY;
@@ -170,7 +175,7 @@ export function animateStarDestroyer(starDestroyerObject, camera){
     }
     const starDestroyerInstance = starDestroyerObject.getInstance();
 
-
+    starDestroyerInstance.quaternion.set(0, 0, 0, 1);
     starDestroyerInstance.direction = new THREE.Vector3(1,0,0);
     let localDirection = starDestroyerInstance.direction.clone();
     let worldDirection = localDirection.clone().applyQuaternion(camera.quaternion).normalize();
@@ -180,9 +185,5 @@ export function animateStarDestroyer(starDestroyerObject, camera){
     // Rotate the object to its world direction.
     const quaternion = new THREE.Quaternion().setFromUnitVectors(localDirection, worldDirection);
     starDestroyerInstance.quaternion.multiply(quaternion);
-
-
-    
-    console.log(anchorPathPoints);
     starDestroyerObject.setPath(anchorPathPoints);
 }
