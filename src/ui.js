@@ -21,16 +21,17 @@ toggleAmbientBtn.addEventListener('click', () => {
 toggleCamAnimBtn.addEventListener('click', () => {
     toggleCamAnimBtn.classList.toggle('clicked'); 
 });
+let textLayer = document.getElementById('text-layer');
 
 document.addEventListener("keydown", (e) => {
     if(e.code == "Space") {
         e.preventDefault();
         toggleCamAnimBtn.classList.toggle('clicked'); 
+        textLayer.style.opacity = '0';
     }
 });
 
 
-let textLayer = document.getElementById('text-layer');
 
 
 window.addEventListener('scroll', () => {
