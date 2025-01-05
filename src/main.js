@@ -229,6 +229,13 @@ toggleCamAnimBtn.addEventListener("click", () => {
     cameraController.toggleAnimation();
 });
 
+document.addEventListener("keydown", (e) => {
+    if(e.code == "Space") {
+        e.preventDefault();
+        cameraController.toggleAnimation();
+    }
+});
+
 
 
 // Animation loop
