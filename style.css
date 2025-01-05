@@ -38,6 +38,7 @@ canvas {
     justify-content: center;
     flex-direction: column;
     font-size: 0.6rem;
+    opacity: 0;
 }
 
 #text-layer img {
@@ -67,6 +68,7 @@ canvas {
     top: 1rem;
     z-index: 20;
     transition: right 0.2s ease-in-out;
+    opacity: 0;
 }
 
 #control-menu-btn.open {

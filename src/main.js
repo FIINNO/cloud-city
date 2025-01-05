@@ -8,7 +8,6 @@ import { StarDestroyer } from './star-destroyer.js';
 import { CloudCar } from './cloud-car.js';
 import { computeMikkTSpaceTangents } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
-
 // Scene setup
 const scene = new THREE.Scene();
 
@@ -165,6 +164,10 @@ loadingManager.onProgress = (url, loaded, total) => {
     loadingBar.style.width = `${progress}%`;
 }
 
+let textLayer = document.getElementById('text-layer');
+let controlMenuBtn = document.getElementById('control-menu-btn');
+
+
 loadingManager.onLoad = () => {
     cloudCityObject = new CloudCity(cloudCityModel);
     cloudCityInstance = cloudCityObject.getInstance();
@@ -189,6 +192,13 @@ loadingManager.onLoad = () => {
 
     startInterval();
     loadingScreen.style.display = 'none';
+    setTimeout( () => {
+        textLayer.style.opacity = '1';
+        textLayer.style.transition = 'opacity 0.5s ease';
+        
+        controlMenuBtn.style.opacity = '1';
+        controlMenuBtn.style.transition = 'opacity 0.5s ease';
+    }, 8000);
     renderer.compile(scene, camera);
     renderer.render(scene, camera);
     cameraController.startInitialAnimation();
@@ -248,7 +258,6 @@ function animate() {
     requestAnimationFrame(animate);
     
 }
-//animate();
 
 
 

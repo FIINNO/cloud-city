@@ -32,6 +32,7 @@ document.addEventListener("keydown", (e) => {
 
 let textLayer = document.getElementById('text-layer');
 
+
 window.addEventListener('scroll', () => {
     if(window.scrollY == 0) {
         textLayer.style.opacity = '1';
