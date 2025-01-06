@@ -142,7 +142,7 @@ loadingManager.onLoad = () => {
         cloudCarObjects[i] = cloudCarObject;
     }
 
-    startInterval();
+    
     loadingScreen.style.display = 'none';
     
     renderer.compile(scene, camera);
@@ -155,7 +155,7 @@ loadingManager.onLoad = () => {
         controlMenuBtn.style.opacity = '1';
         controlMenuBtn.style.transition = 'opacity 0.5s ease';
     }, 5000);
-    
+    startInterval();
     let cloudCarInstance = cloudCarObjects[0].getInstance();
     cloudCarInstance = animationUtils.randomCloudCarPosition(cloudCarInstance, camera, scene);
     animate();
