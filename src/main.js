@@ -155,12 +155,12 @@ loadingManager.onLoad = () => {
         cloudCarObjects[i] = cloudCarObject;
     }
 
-    startInterval();
+    
     loadingScreen.style.display = 'none';
     renderer.compile(scene, camera);
     renderer.render(scene, camera);
     cameraController.startInitialAnimation();
-    
+    startInterval();
     let cloudCarInstance = cloudCarObjects[0].getInstance();
     cloudCarInstance = animationUtils.randomCloudCarPosition(cloudCarInstance, camera, scene);
     animate();

@@ -39,8 +39,7 @@ export function randomCloudCarPosition(cloudCarObject, camera, scene){
         const initialRotation = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI);
         cloudCarObject.quaternion.copy(initialRotation);
 
-
-        const scaleFactor = 0.3*(2000 / Math.max(camera.position.distanceTo(cloudCarObject.position), 3000));
+        const scaleFactor = 0.1*(2000 / Math.max(camera.position.distanceTo(cloudCarObject.position), 3000));
         cloudCarObject.scale.set(scaleFactor,scaleFactor,scaleFactor);
     }
     // Cloud car travels in from behind 
@@ -110,7 +109,7 @@ export function animateCloudCars(cloudCarObjects, camera, scene){
         cloudCarInstance.position.add(movement);
 
         let scaleFactor;
-        if(cloudCarInstance.position.distanceTo(cloudCityObject.position)<400){
+        if(cloudCarInstance.position.distanceTo(cloudCityObject.position)<1000 || cloudCarInstance.position.distanceTo(cloudCityObject.position)<500){
             scaleFactor = 0.999;
         }
         else{
