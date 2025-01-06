@@ -59,7 +59,6 @@ export class Camera {
         this.elapsedTime = 0;
         this.initialAnimationDuration = 5;
         this.easingFunction = (t) => t * (2 - t);
-        this.easing = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
         this.initialPath = new THREE.CatmullRomCurve3(this.initialAnimationPoints);
         this.initialStartLookAt = new THREE.Vector3(-4500, 400, -3000);
