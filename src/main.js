@@ -8,7 +8,6 @@ import { StarDestroyer } from './star-destroyer.js';
 import { CloudCar } from './cloud-car.js';
 import { computeMikkTSpaceTangents } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
-
 // Scene setup
 const scene = new THREE.Scene();
 
@@ -101,13 +100,45 @@ const axesHelper = new THREE.AxesHelper(100);
 scene.add(axesHelper);
 
 // Camera path
-/*const cameraPathPoints = [
+const cameraPathPoints = [
     new THREE.Vector3(-2000, 200, -3000),
     new THREE.Vector3(-1800, 210, -2700),
     new THREE.Vector3(-1600, 220, -2400),
     new THREE.Vector3(-1400, 230, -1800),
     new THREE.Vector3(-1200, 240, -1200),   
-    new THREE.Vector3(-1000, 250, -1000),
+    new THREE.Vector3(-1000, 250, -800),
+    new THREE.Vector3(-800, 250, -500),
+    new THREE.Vector3(-600, 250, -400),
+    new THREE.Vector3(-100, 210, -100),
+    new THREE.Vector3(550, 100, -275),
+    new THREE.Vector3(800, -40, -500),
+    new THREE.Vector3(875, -100, -600),
+    new THREE.Vector3(1050, -180, -900),
+    new THREE.Vector3(1100, -200, -1000),
+    new THREE.Vector3(1150, -200, -1200),
+    new THREE.Vector3(1175, -200, -1300),
+    new THREE.Vector3(1200, -190, -1400),
+    new THREE.Vector3(1200, -180, -1500),
+    new THREE.Vector3(1175, -170, -1600),
+    new THREE.Vector3(1150, -150, -1700),
+    new THREE.Vector3(1125, -130, -1800),
+    new THREE.Vector3(1100, -100, -1900),
+    new THREE.Vector3(1075, -50, -2000),
+    new THREE.Vector3(1050, 0, -2100),
+    new THREE.Vector3(1000, 50, -2200),
+    new THREE.Vector3(950, 125, -2300),
+    new THREE.Vector3(900, 200, -2400),
+    new THREE.Vector3(850, 250, -2500),
+    new THREE.Vector3(800, 300, -2600),
+    new THREE.Vector3(725, 350, -2675),
+    new THREE.Vector3(650, 400, -2750),
+    new THREE.Vector3(550, 450, -2825),
+    new THREE.Vector3(450, 500, -2900),
+    new THREE.Vector3(350, 550, -2950),
+    new THREE.Vector3(250, 600, -3000),
+    new THREE.Vector3(150, 650, -3050),
+    new THREE.Vector3(50, 700, -3100),
+    new THREE.Vector3(-2000, 200, -3000),
 ];
 
 const cameraPath = new THREE.CatmullRomCurve3(cameraPathPoints); 
@@ -116,7 +147,7 @@ const pathPoints = cameraPath.getPoints(50);
 const pathGeometry = new THREE.BufferGeometry().setFromPoints(pathPoints);
 const pathMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 });
 const pathLine = new THREE.Line(pathGeometry, pathMaterial);
-scene.add(pathLine); */
+//scene.add(pathLine);
 
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -132,6 +163,10 @@ loadingManager.onProgress = (url, loaded, total) => {
     const progress = (loaded / total) * 100;
     loadingBar.style.width = `${progress}%`;
 }
+
+let textLayer = document.getElementById('text-layer');
+let controlMenuBtn = document.getElementById('control-menu-btn');
+
 
 loadingManager.onLoad = () => {
     cloudCityObject = new CloudCity(cloudCityModel);
@@ -157,6 +192,13 @@ loadingManager.onLoad = () => {
 
     
     loadingScreen.style.display = 'none';
+    setTimeout( () => {
+        textLayer.style.opacity = '1';
+        textLayer.style.transition = 'opacity 0.5s ease';
+        
+        controlMenuBtn.style.opacity = '1';
+        controlMenuBtn.style.transition = 'opacity 0.5s ease';
+    }, 8000);
     renderer.compile(scene, camera);
     renderer.render(scene, camera);
     cameraController.startInitialAnimation();
@@ -197,6 +239,13 @@ toggleCamAnimBtn.addEventListener("click", () => {
     cameraController.toggleAnimation();
 });
 
+document.addEventListener("keydown", (e) => {
+    if(e.code == "Space") {
+        e.preventDefault();
+        cameraController.toggleAnimation();
+    }
+});
+
 
 
 // Animation loop
@@ -209,7 +258,6 @@ function animate() {
     requestAnimationFrame(animate);
     
 }
-//animate();
 
 
 
