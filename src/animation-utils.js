@@ -2,10 +2,7 @@ import * as THREE from 'three';
 
 
 
-export function randomCloudCarPosition(cloudCarObject, camera, scene){
-    
-    const cloudCityObject = scene.getObjectByName('cloud_city');
-    
+export function randomCloudCarPosition(cloudCarObject, camera, scene){    
     const randomDirection = Math.random() < 0.5 ? "behind" : "right";
     const nearPlane = camera.near;
 
