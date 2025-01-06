@@ -41,10 +41,16 @@ export class StarDestroyer{
             this.starDestroyerObject.quaternion.multiply(quaternion);
             this.starDestroyerObject.direction = newDirection;
         }
-        if(this.starDestroyerObject.position.distanceTo(new THREE.Vector3(0,0,0))>4400){
-            const scaleFactor = 0.99;
+        if(this.starDestroyerObject.position.distanceTo(new THREE.Vector3(0,0,0))>4000){
+            let scaleFactor;
+            if(this.starDestroyerObject.position.distanceTo(new THREE.Vector3(0,0,0))>4900){
+                scaleFactor = 0.99;
+            }
+            else{
+                scaleFactor = 0.999;
+            }
             this.starDestroyerObject.scale.set(this.starDestroyerObject.scale.x*scaleFactor, this.starDestroyerObject.scale.y*scaleFactor, this.starDestroyerObject.scale.z*scaleFactor);
-        }        
+        }       
         if(!this.animationToggled){
             this.starDestroyerObject.visible = false;
             return;

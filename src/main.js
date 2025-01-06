@@ -30,7 +30,7 @@ var starDestroyerInstance;
 
 
 // Lightning
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
 scene.add(ambientLight);
 
 const sunLight = new THREE.DirectionalLight(0xffffff, 6.0);
@@ -62,6 +62,18 @@ modelLoader.load('./cloud_city_model/scene.gltf', (gltf) => {
     cloudCityModel.position.set(200, -100, -1200);
     cloudCityModel.scale.set(0.05, 0.05, 0.05);
     cloudCityModel.name = 'cloud_city';
+
+    cloudCityModel.traverse((child) => {
+        if (child.isMesh && child.material) {            
+            if (child.material.type === 'MeshStandardMaterial') {
+                child.material.roughness = 0.05;
+                child.material.metalness = 0.8;
+                child.material.reflectivity = 0.8;
+                child.material.needsUpdate = true;
+            }
+        }
+    });
+
 });
 
 
@@ -72,8 +84,17 @@ modelLoader.load('./cloud_car_model/scene.gltf', (gltf) => {
 modelLoader.load('./star_destroyer_model/scene.gltf', (gltf) => {
     starDestroyerModel = gltf.scene;
     starDestroyerModel.scale.set(20,20,20);
-    //this.starDestroyerObject.rotation.set(0,-Math.PI/2,0);
     starDestroyerModel.visible = false;
+    starDestroyerModel.traverse((child) => {
+        if (child.isMesh && child.material) {    
+            if (child.material.type === 'MeshStandardMaterial') {
+                child.material.roughness = 0.2;
+                child.material.metalness = 0.6;
+                child.material.reflectivity = 0.5;
+                child.material.needsUpdate = true;
+            }
+        }
+    });
 });
 
 
@@ -131,7 +152,7 @@ loadingManager.onLoad = () => {
     for(let i = 0; i<cloudCarObjects.length; ++i){
         const cloudCarObject = new CloudCar(cloudCarModel);
         let cloudCarInstance = cloudCarObject.getInstance();
-        cloudCarInstance = animationUtils.randomCloudCarPosition(cloudCarInstance, camera, scene);
+        cloudCarInstance = animationUtils.randomCloudCarPosition(cloudCarInstance, camera);
         if(i==0){
             cloudCarInstance.position.set(0,0,0);
             cloudCarInstance.visible = true;
@@ -155,18 +176,17 @@ loadingManager.onLoad = () => {
         controlMenuBtn.style.opacity = '1';
         controlMenuBtn.style.transition = 'opacity 0.5s ease';
     }, 5000);
-    startInterval();
     let cloudCarInstance = cloudCarObjects[0].getInstance();
     cloudCarInstance.visible = false;
     cameraController.startInitialAnimation();
-    cloudCarInstance = animationUtils.randomCloudCarPosition(cloudCarInstance, camera, scene);
+    cloudCarInstance = animationUtils.randomCloudCarPosition(cloudCarInstance, camera);
     animate();
 }
 
-
+var intervalID = null;
 const startInterval = () => {
-    const intervalID = setInterval(() => {
-        cloudCarObjects = animationUtils.addCloudCar(cloudCarObjects, camera, scene);
+    intervalID = setInterval(() => {
+        cloudCarObjects = animationUtils.addCloudCar(cloudCarObjects, camera);
     }, 10000);
 };
 
@@ -175,6 +195,7 @@ const toggleSunLightBtn = document.getElementById("toggle-sunlight");
 const toggleAmbientLightBtn = document.getElementById("toggle-ambient-light");
 const toggleCamAnimBtn = document.getElementById("toggle-cam-animation");
 const toggleStarDestroyerBtn = document.getElementById("toggle-star-destroyer");
+const toggleCloudCarBtn = document.getElementById("toggle-cloud-car");
 
 toggleSunLightBtn.addEventListener("click", () => {
     sunLight.visible = !sunLight.visible;
@@ -184,7 +205,6 @@ toggleAmbientLightBtn.addEventListener("click", () => {
 });
 toggleStarDestroyerBtn.addEventListener("click", () => {
     if(!starDestroyerObject.hasAnimation()){
-        console.log("Calling in star destroyer...");
         starDestroyerObject.toggleAnimation();
         animationUtils.animateStarDestroyer(starDestroyerObject, camera);
     }    
@@ -198,6 +218,19 @@ document.addEventListener("keydown", (e) => {
     if(e.code == "Space") {
         e.preventDefault();
         cameraController.toggleAnimation();
+    }
+});
+
+var cloudCarsToggled = false;
+toggleCloudCarBtn.addEventListener("click", () => {
+    if(!cloudCarsToggled){
+        cloudCarObjects = animationUtils.addCloudCar(cloudCarObjects, camera);
+        startInterval();
+        cloudCarsToggled = true;
+    }
+    else{
+        clearInterval(intervalID);
+        cloudCarsToggled = false;
     }
 });
 
