@@ -30,10 +30,10 @@ var starDestroyerInstance;
 
 
 // Lightning
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(ambientLight);
 
-const sunLight = new THREE.DirectionalLight(0xffffff, 6.0);
+const sunLight = new THREE.DirectionalLight(0xffffff, 10.0);
 sunLight.position.set(-3500,1000.0,5000);
 sunLight.castShadow = true;
 scene.add(sunLight);
@@ -175,7 +175,7 @@ loadingManager.onLoad = () => {
         
         controlMenuBtn.style.opacity = '1';
         controlMenuBtn.style.transition = 'opacity 0.5s ease';
-    }, 5000);
+    }, 3000);
     let cloudCarInstance = cloudCarObjects[0].getInstance();
     cloudCarInstance.visible = false;
     cameraController.startInitialAnimation();
@@ -207,6 +207,8 @@ toggleStarDestroyerBtn.addEventListener("click", () => {
     if(!starDestroyerObject.hasAnimation()){
         starDestroyerObject.toggleAnimation();
         animationUtils.animateStarDestroyer(starDestroyerObject, camera);
+        toggleStarDestroyerBtn.classList.toggle('clicked');
+
     }    
 });
 
@@ -223,10 +225,12 @@ document.addEventListener("keydown", (e) => {
 
 var cloudCarsToggled = false;
 toggleCloudCarBtn.addEventListener("click", () => {
+    toggleCloudCarBtn.classList.toggle('clicked');
     if(!cloudCarsToggled){
         cloudCarObjects = animationUtils.addCloudCar(cloudCarObjects, camera);
         startInterval();
         cloudCarsToggled = true;
+
     }
     else{
         clearInterval(intervalID);

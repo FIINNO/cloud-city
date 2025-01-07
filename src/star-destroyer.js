@@ -22,12 +22,16 @@ export class StarDestroyer{
 
 
     update(){
-        if(!this.path || !this.animationToggled){return;}
+        if(!this.path || !this.animationToggled) {
+            return;
+        }
         if(this.travelDistance<this.pathPoints.length){
             const pointOnCurve = this.pathPoints[this.travelDistance];
             this.starDestroyerObject.position.copy(pointOnCurve);
         }
         else{
+            const toggleStarDestroyerBtn = document.getElementById("toggle-star-destroyer");
+            toggleStarDestroyerBtn.classList.toggle('clicked');
             this.animationToggled = false;
             this.travelDistance = 0;
             const pointOnCurve = this.pathPoints[this.travelDistance];

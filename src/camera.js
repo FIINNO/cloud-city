@@ -127,7 +127,6 @@ export class Camera {
 
     startInitialAnimation() {
         this.initialAnimationActive = true;
-        console.log("Starting");
         this.camera.lookAt(-4500, 400, -3000);
         this.initialAnimation();
     }
