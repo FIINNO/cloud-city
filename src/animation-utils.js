@@ -104,7 +104,7 @@ export function animateCloudCars(cloudCarObjects, camera, scene){
         cloudCarInstance.position.add(movement);
 
         let scaleFactor;
-        if(cloudCarInstance.position.distanceTo(cloudCityObject.position)<1000 || cloudCarInstance.position.distanceTo(cloudCityObject.position)<500){
+        if(cloudCarInstance.position.distanceTo(cloudCityObject.position)<1000){
             scaleFactor = 0.999;
         }
         else{
