@@ -1,0 +1,11 @@
+Model Information:
+* title:	Star Wars Storm IV Twin-Pod Cloud Car
+* source:	https://sketchfab.com/3d-models/star-wars-storm-iv-twin-pod-cloud-car-9bc20239f9c34ed1baacb9a49ba9377d
+* author:	ParienteChido (https://sketchfab.com/ParienteChido)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Star Wars Storm IV Twin-Pod Cloud Car" (https://sketchfab.com/3d-models/star-wars-storm-iv-twin-pod-cloud-car-9bc20239f9c34ed1baacb9a49ba9377d) by ParienteChido (https://sketchfab.com/ParienteChido) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
