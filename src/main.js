@@ -43,11 +43,6 @@ scene.add(sunLight);
 
 
 
-loadingManager.onProgress = (url, loaded, total) => {
-    const progress = (loaded / total) * 100;
-    loadingBar.style.width = `${progress}%`;
-}
-
 
 // Model loader
 
@@ -119,7 +114,6 @@ scene.add(sphere);
 
 //const axesHelper = new THREE.AxesHelper(100);
 //scene.add(axesHelper);
-
 
 
 function onWindowResize() {
