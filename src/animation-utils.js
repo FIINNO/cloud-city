@@ -105,7 +105,7 @@ export function animateCloudCars(cloudCarObjects, camera, scene){
 
         let scaleFactor;
         if(cloudCarInstance.position.distanceTo(cloudCityObject.position)<1000){
-            scaleFactor = 0.999;
+            scaleFactor = 0.99;
         }
         else{
             scaleFactor = previousCameraDistance / camera.position.distanceTo(cloudCarInstance.position);
